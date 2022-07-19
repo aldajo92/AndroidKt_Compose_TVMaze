@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.aldajo92.tvmazeapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".TVMazeApplication"
         android:allowBackup="true"
@@ -15,7 +17,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name="com.aldajo92.tvmazeapp.MainActivity"
+            android:name="com.aldajo92.tvmazeapp.ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyApplication">

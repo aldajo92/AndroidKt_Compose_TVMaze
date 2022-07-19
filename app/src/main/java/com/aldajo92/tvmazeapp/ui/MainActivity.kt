@@ -1,16 +1,19 @@
-package com.aldajo92.tvmazeapp
+package com.aldajo92.tvmazeapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import com.aldajo92.tvmazeapp.network.home.ShowDTO
+import com.aldajo92.tvmazeapp.presentation.MainViewModel
 import com.aldajo92.tvmazeapp.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,21 +26,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                val nameState = viewModel.name.observeAsState()
-                // A surface container using the 'background' color from the theme
+                val showListState = viewModel.listShowData.observeAsState(emptyList())
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting(nameState.value.orEmpty())
+                    ListShow(showListState.value)
                 }
             }
         }
     }
 
+    // TODO: Use UI Models
     @Composable
-    fun Greeting(name: String) {
-        Text(text = "Hello $name!")
+    fun ListShow(items: List<ShowDTO>) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items.map {
+                item {
+                    Text(text = it.name)
+                }
+            }
+        }
     }
 
 }
