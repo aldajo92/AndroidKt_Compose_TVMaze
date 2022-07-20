@@ -19,6 +19,7 @@ ext {
     retrofit_version = "2.9.0"
     okhttp_version = "4.9.3"
 
+    koil_compose = "2.1.0"
     timber = "5.0.1"
 }
 
@@ -83,6 +84,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    //==================== Image Loading ===========================
+    implementation "io.coil-kt:coil-compose:$koil_compose"
 
     //==================== Logging =================================
     implementation "com.jakewharton.timber:timber:$timber"
