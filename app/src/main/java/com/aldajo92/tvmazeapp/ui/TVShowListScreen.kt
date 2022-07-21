@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
-import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 
 @Composable
 fun TVShowListScreen(

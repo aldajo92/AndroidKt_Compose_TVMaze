@@ -1,8 +1,8 @@
-package com.aldajo92.tvmazeapp.ui.compose_utils.components
+package com.aldajo92.tvmazeapp.ui.ui_components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
