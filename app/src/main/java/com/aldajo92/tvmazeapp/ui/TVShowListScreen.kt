@@ -14,13 +14,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
-import com.aldajo92.tvmazeapp.presentation.MainViewModel
+import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
+import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 
 @Composable
-fun ShowsScreen(
+fun TVShowListScreen(
     onItemClicked: (String) -> Unit
 ) {
-    val viewModel = hiltViewModel<MainViewModel>()
+    val viewModel = hiltViewModel<TVShowsViewModel>()
     val uiState = viewModel.listShowData.observeAsState(listOf())
 
     LazyColumn(
@@ -35,13 +36,12 @@ fun ShowsScreen(
     }
 }
 
-// TODO: Use UI Models
 @Composable
 fun RenderShowItem(item: ShowDTO, onItemClicked: (String) -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clickable { onItemClicked(item.id.toString()) }) {
+            .clickable { onItemClicked(item.id) }) {
         item.image?.get("medium")?.let {
             AsyncImage(
                 modifier = Modifier
@@ -50,6 +50,14 @@ fun RenderShowItem(item: ShowDTO, onItemClicked: (String) -> Unit) {
                 contentDescription = null
             )
         }
+
+//        AsyncImage(
+//            modifier = Modifier
+//                .size(60.dp),
+//            model = item.imageMediumURL,
+//            contentDescription = null
+//        )
+
         Text(text = item.name)
     }
 }

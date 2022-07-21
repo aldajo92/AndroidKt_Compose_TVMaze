@@ -1,6 +1,8 @@
 package com.aldajo92.tvmazeapp.di
 
 import com.aldajo92.tvmazeapp.BuildConfig
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +17,14 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_URL = "https://api.tvmaze.com/"
+
+    @Singleton
+    @Provides
+    internal fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
 
     @Provides
     @Named(TVMAZE_BASE_URL_TAG)

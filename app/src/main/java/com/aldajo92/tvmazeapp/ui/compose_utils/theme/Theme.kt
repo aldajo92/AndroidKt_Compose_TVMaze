@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.ui.theme
+package com.aldajo92.tvmazeapp.ui.compose_utils.theme
 
 import android.app.Activity
 import android.os.Build

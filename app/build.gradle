@@ -16,6 +16,8 @@ ext {
     hilt_version = "2.42"
     hilt_navigation_compose = "1.0.0"
 
+    moshi = "1.13.0"
+
     retrofit_version = "2.9.0"
     okhttp_version = "4.9.3"
 
@@ -78,6 +80,10 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_compose"
+
+    //==================== Moshi ==================================
+    implementation "com.squareup.moshi:moshi:$moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi"
 
     //==================== Networking ==============================
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

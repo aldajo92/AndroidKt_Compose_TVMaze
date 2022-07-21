@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.ui.theme
+package com.aldajo92.tvmazeapp.ui.compose_utils.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

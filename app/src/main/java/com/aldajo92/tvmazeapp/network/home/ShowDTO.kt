@@ -3,7 +3,7 @@ package com.aldajo92.tvmazeapp.network.home
 import com.squareup.moshi.Json
 
 data class ShowDTO(
-    val id: Long,
+    val id: String,
     val url: String?,
     val name: String,
     val type: String?,
