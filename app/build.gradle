@@ -12,6 +12,8 @@ ext {
     androidx_compose_material = "1.1.1"
     androidx_lifecycle_runtime = "2.5.0"
     androidx_activity_compose = "1.5.0"
+    lifecycle_version = "2.4.0"
+
 
     hilt_version = "2.42"
     hilt_navigation_compose = "1.0.0"
@@ -68,13 +70,15 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:androidx_core"
+    implementation "androidx.core:core-ktx:$androidx_core"
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$androidx_compose_material"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle_runtime"
     implementation "androidx.activity:activity-compose:$androidx_activity_compose"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.navigation:navigation-compose:2.5.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     //==================== Dependency Injection ====================
     implementation "com.google.dagger:hilt-android:$hilt_version"

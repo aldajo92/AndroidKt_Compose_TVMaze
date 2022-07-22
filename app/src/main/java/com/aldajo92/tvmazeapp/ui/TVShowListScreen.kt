@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
+import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
 
 @Composable
 fun TVShowListScreen(
@@ -24,11 +25,13 @@ fun TVShowListScreen(
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
     val uiState = viewModel.listShowData.observeAsState(listOf())
+    val listState = rememberForeverLazyListState("Overview")
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.background),
+        state = listState
     ) {
         uiState.value.map {
             item {
@@ -52,14 +55,6 @@ fun RenderShowItem(item: ShowDTO, onItemClicked: (String) -> Unit) {
                 contentDescription = null
             )
         }
-
-//        AsyncImage(
-//            modifier = Modifier
-//                .size(60.dp),
-//            model = item.imageMediumURL,
-//            contentDescription = null
-//        )
-
         Text(
             text = item.name,
             color = MaterialTheme.colors.onBackground
