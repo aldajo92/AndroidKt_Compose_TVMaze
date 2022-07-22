@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.ui
+package com.aldajo92.tvmazeapp.ui.ui_components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

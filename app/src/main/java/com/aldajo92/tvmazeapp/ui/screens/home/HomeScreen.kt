@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.ui.screens.main
+package com.aldajo92.tvmazeapp.ui.screens.home
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.BottomNavigation
@@ -15,16 +15,19 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aldajo92.tvmazeapp.ui.BottomBarScreen
-import com.aldajo92.tvmazeapp.ui.ui_components.BottomNavGraph
+import com.aldajo92.tvmazeapp.ui.ui_components.BottomBarScreen
+import com.aldajo92.tvmazeapp.ui.ui_components.BottomHomeNavGraph
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
+fun HomeScreen(navMainController: NavHostController) {
+    val navHomeController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navHomeController) }
     ) {
-        BottomNavGraph(navController = navController)
+        BottomHomeNavGraph(
+            navHomeController = navHomeController,
+            navMainController = navMainController
+        )
     }
 }
 

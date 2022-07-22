@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.aldajo92.tvmazeapp.ui.compose_utils.theme.MyApplicationTheme
-import com.aldajo92.tvmazeapp.ui.screens.main.MainScreen
+import com.aldajo92.tvmazeapp.ui.screens.ComposeApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -14,17 +14,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-//                ComposeApp()
-                MainScreen()
+                ComposeApp()
             }
-//            val navController = rememberNavController()
-//            BottomNavGraph(navController)
         }
-    }
-
-    object Route {
-        const val SHOW_LIST = "show_list"
-        const val DETAIL = "detail"
     }
 
 }

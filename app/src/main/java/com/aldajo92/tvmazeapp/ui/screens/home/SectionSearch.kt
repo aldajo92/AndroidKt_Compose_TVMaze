@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.ui.screens.main
+package com.aldajo92.tvmazeapp.ui.screens.home
 
 import androidx.compose.runtime.Composable
 

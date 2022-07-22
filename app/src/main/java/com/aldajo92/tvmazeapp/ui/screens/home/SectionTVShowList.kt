@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.ui
+package com.aldajo92.tvmazeapp.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +20,7 @@ import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
 
 @Composable
-fun TVShowListScreen(
+fun SectionTVShowList(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
