@@ -22,7 +22,9 @@ fun ShowDTO.toUIModel() = ShowUIModel(
 )
 
 fun ScheduleDTO.toStringFormatted() =
-    if (this.days.isNotEmpty()) "${this.time.let { if (it.isNotEmpty()) "$it :" else "" }} ${this.days.toReadableDays()}" else "No schedule available"
+    if (this.days.isNotEmpty()) "${this.days.toReadableDays()} : ${this.time.scheduleHourFormat()}" else "No schedule available"
+
+private fun String.scheduleHourFormat() = this.ifEmpty { "" }
 
 fun List<String>.toReadableDays() = this.map { item ->
     "${item.subSequence(0, 3)}"

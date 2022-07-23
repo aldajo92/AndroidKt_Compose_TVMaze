@@ -1,7 +1,6 @@
 package com.aldajo92.tvmazeapp.network.home
 
 import com.squareup.moshi.Json
-import org.jetbrains.annotations.Async
 
 data class ShowDTO(
     val id: String,

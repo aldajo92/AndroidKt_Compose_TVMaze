@@ -15,7 +15,7 @@ class TVShowsViewModel @Inject constructor(
     showRepository: ShowRepository
 ) : ViewModel() {
 
-    val listShowData: LiveData<List<ShowUIModel>> =
+    val listShowLiveData: LiveData<List<ShowUIModel>> =
         showRepository
             .getFlowData()
             .map { it.map { dto -> dto.toUIModel() } }
