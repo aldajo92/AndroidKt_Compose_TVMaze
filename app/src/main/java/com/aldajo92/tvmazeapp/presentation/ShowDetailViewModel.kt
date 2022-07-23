@@ -24,16 +24,16 @@ class ShowDetailViewModel @Inject constructor(
     private val _selectedShowLiveData = MutableLiveData<ShowUIModel?>()
     val selectedShowLiveData: LiveData<ShowUIModel?> = _selectedShowLiveData
 
-    val episodesLiveData: LiveData<List<EpisodeUIModel>> =
+    val episodesLiveData: LiveData<List<EpisodeUIModel>?> =
         episodesRepository
             .getFlowData()
-            .map { it.map { dto -> dto.toUIModel() } }
+            .map { it?.map { dto -> dto.toUIModel() } }
             .asLiveData()
 
     fun getShowDetail(showID: String) {
         episodesRepository.getEpisodes(showID)
-        viewModelScope.launch {
-            if (showID.isNotBlank()) {
+        if (showID.isNotBlank()) {
+            viewModelScope.launch {
                 _selectedShowLiveData.value = showRepository.getShowDetail(showID)?.toUIModel()
             }
         }

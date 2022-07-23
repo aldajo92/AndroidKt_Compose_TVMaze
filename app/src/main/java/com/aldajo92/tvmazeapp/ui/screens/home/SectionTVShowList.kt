@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -45,6 +46,8 @@ import coil.compose.AsyncImage
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
+import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
+import com.aldajo92.tvmazeapp.ui.ui_components.ShowImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -127,12 +130,11 @@ fun RenderShowItem(item: ShowUIModel, onItemClicked: (String) -> Unit) {
                 HorizontalTextAnimation(textTitle = item.scheduleText)
             }
             Box(Modifier.background(MaterialTheme.colors.background)) {
-                AsyncImage(
+                ShowImageShimmer(
                     modifier = Modifier
                         .padding(5.dp)
                         .size(100.dp),
-                    model = item.imageMediumURL,
-                    contentDescription = null
+                    imageUrl = item.imageMediumURL
                 )
             }
         }

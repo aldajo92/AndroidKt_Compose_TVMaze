@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,9 +18,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +36,7 @@ import com.aldajo92.tvmazeapp.ui.ui_components.AppBarWithArrow
 import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.RatingBar
 import com.aldajo92.tvmazeapp.ui.ui_components.SummarySection
+import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 
 @Composable
 fun DetailsScreen(
@@ -53,6 +57,7 @@ fun DetailsScreen(
         selectedShowState.value?.raiting ?: 0f,
         selectedShowState.value?.scheduleText.orEmpty(),
         selectedShowState.value?.genres?.reduce { acc, s -> "$acc, $s" } ?: "",
+        episodesState.value?.isEmpty() == true,
         episodesState.value ?: emptyList(),
         selectedShowState.value?.summary.orEmpty(),
         pressOnBack,
@@ -68,6 +73,7 @@ fun DetailScreenUI(
     rating: Float = 0f,
     textScheduleValue: String = "Lun, Tue, Wed : 21:00",
     textGeneresValue: String = "Genere1, Genere2, Genere3",
+    episodesLoading: Boolean = false,
     episodesList: List<EpisodeUIModel> = listOf(),
     textSummaryContent: String = "Lorem posium",
     pressOnBack: () -> Unit = {},
@@ -105,19 +111,19 @@ fun DetailScreenUI(
             )
         }
 
-        val seasonMap = episodesList.groupBy { it.season }
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
+        LazyColumn {
             item { SummarySection(textSummaryContent = textSummaryContent) }
-            seasonMap.map { entry ->
-                item {
-                    SeasonSection(
-                        "Season ${entry.key}",
-                        entry.value,
-                        episodeClicked
-                    )
+            if (episodesLoading) {
+                item { RenderEpisodeItemShimmerColumn(Modifier.padding(start = 15.dp)) }
+            } else {
+                episodesList.groupBy { it.season }.map { entry ->
+                    item {
+                        SeasonSection(
+                            "Season ${entry.key}",
+                            entry.value,
+                            episodeClicked
+                        )
+                    }
                 }
             }
         }
@@ -220,6 +226,66 @@ fun RenderEpisodeItem(
             text = name,
             fontSize = 10.sp,
             color = MaterialTheme.colors.onBackground
+        )
+    }
+}
+
+@Preview
+@Composable
+fun RenderEpisodeItemShimmerColumn(
+    modifier: Modifier = Modifier,
+    brush: Brush = createShimmerBrush()
+) {
+    Column(modifier = modifier) {
+        repeat(2) {
+            Spacer(
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .padding(top = 10.dp)
+                    .height(15.dp)
+                    .width(50.dp)
+                    .background(brush)
+            )
+            RenderEpisodeItemShimmerRow(brush)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun RenderEpisodeItemShimmerRow(
+    brush: Brush = createShimmerBrush()
+) {
+    Row(modifier = Modifier.padding(start = 5.dp)) {
+        repeat(3) {
+            RenderEpisodeItemShimmer(brush)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun RenderEpisodeItemShimmer(
+    brush: Brush = createShimmerBrush()
+) {
+    Column(
+        modifier = Modifier
+            .width(100.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(
+            modifier = Modifier
+                .height(56.dp)
+                .padding(5.dp)
+                .fillMaxWidth()
+                .background(brush),
+        )
+        Spacer(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .height(10.dp)
+                .fillMaxWidth()
+                .background(brush)
         )
     }
 }
