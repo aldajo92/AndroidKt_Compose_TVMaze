@@ -9,6 +9,7 @@ fun EpisodeDTO.toUIModel() = EpisodeUIModel(
     this.name.orEmpty(),
     this.season ?: 0,
     this.number ?: 0,
+    this.summary.orEmpty(),
     this.airdate.orEmpty(),
     this.airtime.orEmpty(),
     this.runtime ?: 0,

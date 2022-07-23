@@ -71,9 +71,11 @@ fun ComposeApp() {
                     animationSpec = tween(700)
                 )
             },
-        ) {
+        ) { backStackEntry ->
+            val episodeId =
+                (backStackEntry.arguments?.get(NAVIGATION_EPISODE_ID_ARGUMENT) as String?).orEmpty()
             EpisodeScreen(
-                "",
+                episodeId,
                 navMainController::navigateUp
             )
         }

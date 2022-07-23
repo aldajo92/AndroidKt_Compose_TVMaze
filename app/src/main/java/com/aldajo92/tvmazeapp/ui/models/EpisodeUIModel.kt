@@ -6,6 +6,7 @@ data class EpisodeUIModel(
     val name: String,
     val season: Int,
     val number: Int,
+    val summary: String,
     val airdate: String,
     val airtime: String,
     val runtime: Int,

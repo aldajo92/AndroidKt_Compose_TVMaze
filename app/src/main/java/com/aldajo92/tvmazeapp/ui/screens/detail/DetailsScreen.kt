@@ -30,8 +30,9 @@ import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.ShowDetailViewModel
 import com.aldajo92.tvmazeapp.ui.models.EpisodeUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.AppBarWithArrow
-import com.aldajo92.tvmazeapp.ui.ui_components.HtmlText
+import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.RatingBar
+import com.aldajo92.tvmazeapp.ui.ui_components.SummarySection
 
 @Composable
 fun DetailsScreen(
@@ -169,27 +170,6 @@ fun ContentHeader(
 }
 
 @Composable
-fun SummarySection(
-    textSummary: String = "Summary:",
-    textSummaryContent: String = "Loren posium"
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-    ) {
-        Text(
-            text = textSummary,
-            color = MaterialTheme.colors.onBackground
-        )
-        HtmlText(
-            text = textSummaryContent,
-            color = MaterialTheme.colors.onBackground
-        )
-    }
-}
-
-@Composable
 fun SeasonSection(
     seasonTitle: String = "Episodes:",
     episodesList: List<EpisodeUIModel> = listOf(),
@@ -229,9 +209,8 @@ fun RenderEpisodeItem(
             .clickable { episodeClicked() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!imageUrl.isNullOrBlank()) AsyncImage(
-            model = imageUrl,
-            contentDescription = null
+        if (!imageUrl.isNullOrBlank()) AsyncImageShimmer(
+            imageUrl = imageUrl
         ) else Image(
             modifier = Modifier.padding(5.dp),
             painter = painterResource(R.drawable.episode_place_holder_original),

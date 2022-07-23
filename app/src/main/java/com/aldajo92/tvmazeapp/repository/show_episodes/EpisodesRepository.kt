@@ -7,4 +7,6 @@ interface EpisodesRepository : FlowData<List<EpisodeDTO>> {
 
     fun getEpisodes(showId: String)
 
+    fun getSelectedEpisode(episodeId: String) : EpisodeDTO?
+
 }
