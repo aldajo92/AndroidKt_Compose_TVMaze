@@ -81,6 +81,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:0.23.1"
 
+    debugImplementation "androidx.compose.ui:ui-tooling:1.1.1"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.1.1"
+
     //==================== Dependency Injection ====================
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"

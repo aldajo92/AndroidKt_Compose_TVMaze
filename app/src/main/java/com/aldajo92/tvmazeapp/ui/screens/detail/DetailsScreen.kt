@@ -1,46 +1,165 @@
 package com.aldajo92.tvmazeapp.ui.screens.detail
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.ShowDetailViewModel
+import com.aldajo92.tvmazeapp.ui.ui_components.AppBarWithArrow
+import com.aldajo92.tvmazeapp.ui.ui_components.HtmlText
+import com.aldajo92.tvmazeapp.ui.ui_components.RatingBar
 
 @Composable
-fun DetailsScreen(showID: String = "") {
+fun DetailsScreen(
+    showID: String = "Title",
+    pressOnBack: () -> Unit = {}
+) {
 
     val viewModel = hiltViewModel<ShowDetailViewModel>()
     viewModel.getSelectedShow(showID)
 
     val selectedShow = viewModel.selectedShowLiveData.observeAsState()
 
-    Box(
+    DetailScreen(
+        selectedShow.value?.name.orEmpty(),
+        selectedShow.value?.imageHighURL,
+        selectedShow.value?.raiting ?: 0f,
+        selectedShow.value?.summary.orEmpty(),
+        pressOnBack
+    )
+}
+
+@Preview
+@Composable
+fun DetailScreen(
+    sectionTitleText: String = "",
+    imageUrl: String? = "",
+    rating: Float = 0f,
+    textSummaryContent: String = "",
+    pressOnBack: () -> Unit = {}
+) {
+    Column(
         modifier = Modifier
-            .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .fillMaxSize(),
     ) {
-        selectedShow.value?.let {
-            AsyncImage(
+        AppBarWithArrow(
+            modifier = Modifier.fillMaxWidth(),
+            sectionTitleText, pressOnBack
+        )
+        Row(
+            modifier = Modifier
+                .padding(vertical = 20.dp)
+                .background(MaterialTheme.colors.background)
+        ) {
+            if (!imageUrl.isNullOrBlank()) AsyncImage(
                 modifier = Modifier
-                    .size(60.dp),
-                model = it.imageMediumURL,
+                    .size(200.dp),
+                model = imageUrl,
+                contentDescription = null
+            ) else Image(
+                painter = painterResource(R.drawable.place_holder_original),
+                modifier = Modifier
+                    .size(200.dp),
                 contentDescription = null
             )
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = it.name,
-                color = MaterialTheme.colors.onBackground
-            )
+            ContentHeader(rateValue = rating/2f)
         }
+        SummarySection(textSummaryContent = textSummaryContent)
+        EpisodesSection()
     }
+}
 
+@Preview
+@Composable
+fun ContentHeader(
+    textRating: String = "Rating:",
+    rateValue: Float? = 4.0f,
+    textGeneres: String = "Generes:",
+    textGeneresValue: String = "Genere1, Genere2, Genere3",
+    textSchedule: String = "Schedule:",
+    textScheduleValue: String = "Lun, Tue, Wed : 21:00",
+) {
+    Column(
+        modifier = Modifier.padding(end = 20.dp)
+    ) {
+        Text(
+            text = textRating,
+            color = MaterialTheme.colors.onBackground
+        )
+        if (rateValue != null) RatingBar(
+            modifier = Modifier.height(20.dp),
+            rating = rateValue
+        )
+        else Text(text = "[No rate available]")
+
+        Text(
+            modifier = Modifier.padding(top = 20.dp),
+            text = textGeneres,
+            color = MaterialTheme.colors.onBackground
+        )
+        Text(
+            text = textGeneresValue,
+            color = MaterialTheme.colors.onBackground
+        )
+
+        Text(
+            modifier = Modifier.padding(top = 20.dp),
+            text = textSchedule,
+            color = MaterialTheme.colors.onBackground
+        )
+        Text(
+            text = textScheduleValue,
+            color = MaterialTheme.colors.onBackground
+        )
+    }
+}
+
+@Composable
+fun SummarySection(
+    textSummary: String = "Summary:",
+    textSummaryContent: String = "Loren posium"
+) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 20.dp)) {
+        Text(
+            text = textSummary,
+            color = MaterialTheme.colors.onBackground
+        )
+        HtmlText(
+            text = textSummaryContent,
+            color = MaterialTheme.colors.onBackground
+        )
+    }
+}
+
+@Composable
+fun EpisodesSection(
+    textEpisodesTitle: String = "Episodes:"
+) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 20.dp)) {
+        Text(
+            text = textEpisodesTitle,
+            color = MaterialTheme.colors.onBackground
+        )
+    }
 }

@@ -12,5 +12,7 @@ data class ShowUIModel(
     val officialSite: String,
     val imageMediumURL: String,
     val imageHighURL: String,
-    val summary: String
+    val summary: String,
+    val raiting: Float?,
+    val scheduleText : String
 )

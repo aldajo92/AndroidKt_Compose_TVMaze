@@ -29,10 +29,16 @@ fun ComposeApp() {
         composable(
             route = "${MAIN_ROUTE_DETAIL}/{${NAVIGATION_SHOW_ID_ARGUMENT}}",
             enterTransition = {
-                slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
             },
             exitTransition = {
-                slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
             },
             arguments = listOf(
                 navArgument(NAVIGATION_SHOW_ID_ARGUMENT) {
@@ -41,7 +47,11 @@ fun ComposeApp() {
             ),
         ) {
             val showID = (it.arguments?.get(NAVIGATION_SHOW_ID_ARGUMENT) as String?).orEmpty()
-            DetailsScreen(showID)
+            DetailsScreen(
+                showID
+            ) {
+                navMainController.navigateUp()
+            }
         }
     }
 }

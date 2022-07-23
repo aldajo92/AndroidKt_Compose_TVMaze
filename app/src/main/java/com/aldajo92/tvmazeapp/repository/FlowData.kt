@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.repository.show_list
+package com.aldajo92.tvmazeapp.repository
 
 import kotlinx.coroutines.flow.Flow
 
