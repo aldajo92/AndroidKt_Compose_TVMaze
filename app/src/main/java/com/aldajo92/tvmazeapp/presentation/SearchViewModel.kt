@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.aldajo92.tvmazeapp.mappers.toUIModel
+import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
-import com.aldajo92.tvmazeapp.ui.ui_components.SearchWidgetState
+import com.aldajo92.tvmazeapp.ui.models.SearchResultUIEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,25 +18,25 @@ class SearchViewModel @Inject constructor(
     private val showRepository: ShowRepository
 ) : ViewModel() {
 
-    val searchResultsLiveData = searchShowsRepository.getFlowData().map { data ->
-        data.map { it.show.toUIModel() }
-    }.asLiveData()
+    init {
+        searchShowsRepository.clearResults()
+    }
 
-    private val _searchWidgetState = MutableLiveData(SearchWidgetState.CLOSED)
-    val searchWidgetState: LiveData<SearchWidgetState> = _searchWidgetState
+    val searchResultsLiveData: LiveData<SearchResultUIEvents> = searchShowsRepository
+        .getFlowData()
+        .map { searchResultStatus ->
+            searchResultStatus.toUIEvent()
+        }.asLiveData()
 
     private val _searchTextState = MutableLiveData("")
     val searchTextState: LiveData<String> = _searchTextState
-
-    fun updateSearchWidgetState(newValue: SearchWidgetState) {
-        _searchWidgetState.value = newValue
-    }
 
     fun updateSearchTextState(newValue: String) {
         _searchTextState.value = newValue
     }
 
     fun performSearch(keyword: String) {
+//        _searchTextState.value = keyword
         searchShowsRepository.performSearchShow(keyword)
     }
 

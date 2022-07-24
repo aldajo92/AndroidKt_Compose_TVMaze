@@ -66,6 +66,7 @@ fun SectionTVShowList(
     RenderShowListResult(
         listResultState,
         listState,
+        listResultState.isEmpty(),
         onItemClicked
     )
 }
@@ -74,6 +75,7 @@ fun SectionTVShowList(
 fun RenderShowListResult(
     showList: List<ShowUIModel> = listOf(),
     state: LazyListState = rememberLazyListState(),
+    showLoader : Boolean = true,
     onItemClicked: (String) -> Unit = {}
 ) {
     LazyColumn(
@@ -84,7 +86,7 @@ fun RenderShowListResult(
         contentPadding = PaddingValues(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        if (showList.isEmpty()) {
+        if (showLoader) {
             repeat(6) { item { ShimmerShowItem() } }
         } else showList.map {
             item { RenderShowItem(item = it, onItemClicked = onItemClicked) }
@@ -146,11 +148,10 @@ fun RenderShowItem(item: ShowUIModel, onItemClicked: (String) -> Unit) {
                 HorizontalTextAnimation(textTitle = item.scheduleText)
             }
             Box(Modifier.background(MaterialTheme.colors.background)) {
-                if (item.imageMediumURL.isNotBlank()) AsyncImage(
+                if (item.imageMediumURL.isNotBlank()) ShowImageShimmer(
                     modifier = Modifier
                         .size(100.dp),
-                    model = item.imageMediumURL,
-                    contentDescription = null
+                    imageUrl = item.imageMediumURL
                 ) else Image(
                     painter = painterResource(R.drawable.place_holder_original),
                     modifier = Modifier

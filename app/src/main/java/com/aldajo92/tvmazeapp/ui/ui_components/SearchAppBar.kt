@@ -15,7 +15,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -29,23 +28,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-@Preview
-@Composable
-fun DefaultAppBar(onSearchClicked: () -> Unit = {}) {
-    TopAppBar(
-        title = { Text(text = "Title Example") },
-        actions = {
-            IconButton(onClick = onSearchClicked) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search Icon",
-                    tint = Color.White
-                )
-            }
-        }
-    )
-}
 
 @Preview
 @Composable
@@ -85,6 +67,7 @@ fun SearchAppBar(
                 IconButton(modifier = Modifier.alpha(ContentAlpha.medium), onClick = {
                     if (text.isNotEmpty()) {
                         onTextChange("")
+                        keyboardController?.hide()
                     } else {
                         onCloseClicked()
                     }
