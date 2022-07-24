@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -37,16 +39,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
-import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.ShowImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 import kotlinx.coroutines.launch
@@ -57,20 +60,33 @@ fun SectionTVShowList(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
-    val uiState = viewModel.listShowLiveData.observeAsState(listOf())
+    val listResultState by viewModel.listShowLiveData.observeAsState(listOf())
     val listState = rememberForeverLazyListState("Overview")
 
+    RenderShowListResult(
+        listResultState,
+        listState,
+        onItemClicked
+    )
+}
+
+@Composable
+fun RenderShowListResult(
+    showList: List<ShowUIModel> = listOf(),
+    state: LazyListState = rememberLazyListState(),
+    onItemClicked: (String) -> Unit = {}
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background),
-        state = listState,
+        state = state,
         contentPadding = PaddingValues(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        if (uiState.value.isEmpty()) {
+        if (showList.isEmpty()) {
             repeat(6) { item { ShimmerShowItem() } }
-        } else uiState.value.map {
+        } else showList.map {
             item { RenderShowItem(item = it, onItemClicked = onItemClicked) }
         }
     }
@@ -130,11 +146,16 @@ fun RenderShowItem(item: ShowUIModel, onItemClicked: (String) -> Unit) {
                 HorizontalTextAnimation(textTitle = item.scheduleText)
             }
             Box(Modifier.background(MaterialTheme.colors.background)) {
-                ShowImageShimmer(
+                if (item.imageMediumURL.isNotBlank()) AsyncImage(
                     modifier = Modifier
-                        .padding(5.dp)
                         .size(100.dp),
-                    imageUrl = item.imageMediumURL
+                    model = item.imageMediumURL,
+                    contentDescription = null
+                ) else Image(
+                    painter = painterResource(R.drawable.place_holder_original),
+                    modifier = Modifier
+                        .size(100.dp),
+                    contentDescription = null
                 )
             }
         }

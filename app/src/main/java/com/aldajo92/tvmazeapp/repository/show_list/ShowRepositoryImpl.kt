@@ -14,20 +14,23 @@ class ShowRepositoryImpl(
 
     private val showListFlow = MutableStateFlow<List<ShowDTO>>(emptyList())
 
-    private var showMaps: Map<String, ShowDTO>? = null
+    private var showMaps: MutableMap<String, ShowDTO> = mutableMapOf()
 
     override fun getShows() {
         CoroutineScope(Dispatchers.IO).launch {
             showListFlow.value = api
                 .getShows(1)
                 .also {
-                    showMaps = it.associateBy { showDTO -> showDTO.id }
+                    showMaps = it.associateBy { showDTO -> showDTO.id }.toMutableMap()
                 }
         }
     }
 
-    override suspend fun getShowDetail(showID: String): ShowDTO? =
-        showMaps?.get(showID)
+    override fun saveSelectedShow(showDTO: ShowDTO) {
+        showMaps[showDTO.id] = showDTO
+    }
+
+    override suspend fun getShowFromCache(showID: String): ShowDTO? = showMaps[showID]
 
     override fun getFlowData(): Flow<List<ShowDTO>> = showListFlow
 }

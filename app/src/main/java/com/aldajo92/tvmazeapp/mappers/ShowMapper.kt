@@ -22,7 +22,9 @@ fun ShowDTO.toUIModel() = ShowUIModel(
 )
 
 fun ScheduleDTO.toStringFormatted() =
-    if (this.days.isNotEmpty()) "${this.days.toReadableDays()} : ${this.time.scheduleHourFormat()}" else "No schedule available"
+    if (this.days.isNotEmpty()) "${this.days.toReadableDays()} ${this.time.validateEmptyTime()}" else "[No schedule available]"
+
+fun String.validateEmptyTime() = if(this.isEmpty()) ": No hour available" else ": ${this.scheduleHourFormat()}"
 
 private fun String.scheduleHourFormat() = this.ifEmpty { "" }
 

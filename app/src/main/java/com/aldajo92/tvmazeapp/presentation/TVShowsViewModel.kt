@@ -22,6 +22,7 @@ class TVShowsViewModel @Inject constructor(
             .asLiveData()
 
     init {
+        // TODO: Pending to handle pagination
         showRepository.getShows()
     }
 

@@ -7,6 +7,8 @@ interface ShowRepository : FlowData<List<ShowDTO>> {
 
     fun getShows()
 
-    suspend fun getShowDetail(showID: String): ShowDTO?
+    fun saveSelectedShow(showDTO: ShowDTO)
+
+    suspend fun getShowFromCache(showID: String): ShowDTO?
 
 }
