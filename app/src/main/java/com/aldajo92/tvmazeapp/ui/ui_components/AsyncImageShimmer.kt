@@ -75,7 +75,7 @@ fun ShowImageShimmer(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(height = 100.dp, width = 68.dp)
-                .padding(horizontal = 5.dp)
+                .padding(horizontal = 15.dp)
                 .background(brush)
         )
     }

@@ -36,7 +36,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun performSearch(keyword: String) {
-//        _searchTextState.value = keyword
         searchShowsRepository.performSearchShow(keyword)
     }
 
