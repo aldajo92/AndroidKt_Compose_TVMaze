@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.aldajo92.tvmazeapp.ui.ui_components
 
 import androidx.compose.foundation.Image
@@ -41,7 +40,7 @@ import androidx.compose.ui.unit.sp
 @Preview
 @Composable
 fun AppBarWithArrow(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     title: String? = "CustomTitle",
     pressOnBack: () -> Unit = {},
 ) {
@@ -59,18 +58,18 @@ fun AppBarWithArrow(
                 colorFilter = ColorFilter.tint(Color.White),
                 contentDescription = null,
                 modifier = Modifier
-                  .align(Alignment.CenterVertically)
-                  .clickable {
-                    pressOnBack()
-                  }
+                    .align(Alignment.CenterVertically)
+                    .clickable {
+                        pressOnBack()
+                    }
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
             Text(
                 modifier = Modifier
-                  .padding(8.dp)
-                  .align(Alignment.CenterVertically),
+                    .padding(8.dp)
+                    .align(Alignment.CenterVertically),
                 text = title ?: "",
                 color = Color.White,
                 fontSize = 18.sp,

@@ -34,7 +34,7 @@ class ShowDetailViewModel @Inject constructor(
         episodesRepository.getEpisodes(showID)
         if (showID.isNotBlank()) {
             viewModelScope.launch {
-                _selectedShowLiveData.value = showRepository.getShowDetail(showID)?.toUIModel()
+                _selectedShowLiveData.value = showRepository.getShowFromCache(showID)?.toUIModel()
             }
         }
     }

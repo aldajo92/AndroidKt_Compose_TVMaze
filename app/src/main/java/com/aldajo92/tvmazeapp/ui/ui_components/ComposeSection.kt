@@ -25,7 +25,7 @@ fun SummarySection(
             color = MaterialTheme.colors.onBackground
         )
         HtmlText(
-            text = textSummaryContent,
+            text = textSummaryContent.ifEmpty { "[No summary available]" },
             color = MaterialTheme.colors.onBackground
         )
     }

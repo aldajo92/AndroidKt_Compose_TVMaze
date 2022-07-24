@@ -4,8 +4,12 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +22,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -37,16 +43,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
-import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.ShowImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 import kotlinx.coroutines.launch
@@ -57,34 +63,56 @@ fun SectionTVShowList(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
-    val uiState = viewModel.listShowLiveData.observeAsState(listOf())
-    val listState = rememberForeverLazyListState("Overview")
+    val listResultState by viewModel.listShowLiveData.observeAsState(listOf())
+    val listState = rememberForeverLazyListState("Home")
 
-    LazyColumn(
+    RenderShowListResult(
+        listResultState,
+        listState,
+        listResultState.isEmpty(),
+        onItemClicked
+    )
+}
+
+@Composable
+fun RenderShowListResult(
+    showList: List<ShowUIModel> = listOf(),
+    state: LazyListState = rememberLazyListState(),
+    showLoader: Boolean = true,
+    onItemClicked: (String) -> Unit = {}
+) {
+    if (showLoader) Column(
+        modifier = Modifier
+            .padding(top = 20.dp)
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        repeat(6) { ShimmerShowItem(Modifier.padding(start = 5.dp)) }
+    }
+    else LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background),
-        state = listState,
+        state = state,
         contentPadding = PaddingValues(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        if (uiState.value.isEmpty()) {
-            repeat(6) { item { ShimmerShowItem() } }
-        } else uiState.value.map {
+        showList.map {
             item { RenderShowItem(item = it, onItemClicked = onItemClicked) }
         }
     }
 }
 
 @Composable
-fun ShimmerShowItem(brush: Brush = createShimmerBrush()) {
+fun ShimmerShowItem(modifier: Modifier = Modifier, brush: Brush = createShimmerBrush()) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Box(Modifier.background(MaterialTheme.colors.background)) {
             Spacer(
                 modifier = Modifier
-                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .padding(vertical = 2.dp, horizontal = 10.dp)
                     .size(height = 100.dp, width = 68.dp)
                     .background(brush)
             )
@@ -130,11 +158,15 @@ fun RenderShowItem(item: ShowUIModel, onItemClicked: (String) -> Unit) {
                 HorizontalTextAnimation(textTitle = item.scheduleText)
             }
             Box(Modifier.background(MaterialTheme.colors.background)) {
-                ShowImageShimmer(
+                if (item.imageMediumURL.isNotBlank()) ShowImageShimmer(
                     modifier = Modifier
-                        .padding(5.dp)
                         .size(100.dp),
                     imageUrl = item.imageMediumURL
+                ) else Image(
+                    painter = painterResource(R.drawable.place_holder_original),
+                    modifier = Modifier
+                        .size(100.dp),
+                    contentDescription = null
                 )
             }
         }

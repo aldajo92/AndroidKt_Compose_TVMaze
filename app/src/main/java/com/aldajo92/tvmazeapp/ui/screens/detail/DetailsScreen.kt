@@ -3,7 +3,6 @@ package com.aldajo92.tvmazeapp.ui.screens.detail
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,18 +47,22 @@ fun DetailsScreen(
     val viewModel = hiltViewModel<ShowDetailViewModel>()
     viewModel.getShowDetail(showId)
 
-    val selectedShowState = viewModel.selectedShowLiveData.observeAsState()
+    val selectedShowState by viewModel.selectedShowLiveData.observeAsState()
     val episodesState = viewModel.episodesLiveData.observeAsState()
 
     DetailScreenUI(
-        selectedShowState.value?.name.orEmpty(),
-        selectedShowState.value?.imageHighURL,
-        selectedShowState.value?.raiting ?: 0f,
-        selectedShowState.value?.scheduleText.orEmpty(),
-        selectedShowState.value?.genres?.reduce { acc, s -> "$acc, $s" } ?: "",
+        selectedShowState?.name.orEmpty(),
+        selectedShowState?.imageHighURL,
+        selectedShowState?.raiting,
+        selectedShowState?.scheduleText.orEmpty(),
+        selectedShowState?.genres?.let {
+            if (it.isEmpty()) ""
+            else it.reduce { acc, s -> "$acc, $s" }
+        } ?: "",
+        selectedShowState?.language.orEmpty(),
         episodesState.value?.isEmpty() == true,
         episodesState.value ?: emptyList(),
-        selectedShowState.value?.summary.orEmpty(),
+        selectedShowState?.summary.orEmpty(),
         pressOnBack,
         episodeClicked
     )
@@ -70,9 +73,10 @@ fun DetailsScreen(
 fun DetailScreenUI(
     sectionTitleText: String = "",
     imageUrl: String? = "",
-    rating: Float = 0f,
+    rating: Float? = 0f,
     textScheduleValue: String = "Lun, Tue, Wed : 21:00",
     textGeneresValue: String = "Genere1, Genere2, Genere3",
+    textLanguage: String = "English",
     episodesLoading: Boolean = false,
     episodesList: List<EpisodeUIModel> = listOf(),
     textSummaryContent: String = "Lorem posium",
@@ -105,9 +109,10 @@ fun DetailScreenUI(
                 contentDescription = null
             )
             ContentHeader(
-                rateValue = rating / 2f,
+                rateValue = rating,
                 textGeneresValue = textGeneresValue,
-                textScheduleValue = textScheduleValue
+                textScheduleValue = textScheduleValue,
+                textLanguage = textLanguage
             )
         }
 
@@ -139,6 +144,7 @@ fun ContentHeader(
     textGeneresValue: String = "Genere1, Genere2, Genere3",
     textSchedule: String = "Schedule:",
     textScheduleValue: String = "Lun, Tue, Wed : 21:00",
+    textLanguage: String = "English"
 ) {
     Column(
         modifier = Modifier.padding(end = 20.dp)
@@ -149,17 +155,20 @@ fun ContentHeader(
         )
         if (rateValue != null) RatingBar(
             modifier = Modifier.height(20.dp),
-            rating = rateValue
+            rating = rateValue / 2f
         )
-        else Text(text = "[No rate available]")
+        else Text(text = "[No rate available]", color = MaterialTheme.colors.onBackground)
 
         Text(
             modifier = Modifier.padding(top = 20.dp),
             text = textGeneres,
             color = MaterialTheme.colors.onBackground
         )
+
         Text(
-            text = textGeneresValue,
+            text = if (textGeneresValue.isNotEmpty()) {
+                textGeneresValue
+            } else "[No genres available]",
             color = MaterialTheme.colors.onBackground
         )
 
@@ -172,6 +181,13 @@ fun ContentHeader(
             text = textScheduleValue,
             color = MaterialTheme.colors.onBackground
         )
+        if (textLanguage.isNotEmpty()) {
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                text = textLanguage,
+                color = MaterialTheme.colors.onBackground
+            )
+        }
     }
 }
 

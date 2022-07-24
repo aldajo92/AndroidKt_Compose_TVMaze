@@ -83,7 +83,7 @@ fun EpisodeSectionUI(
                         .padding(horizontal = 20.dp)
                         .padding(top = 10.dp)
                         .fillMaxWidth(),
-                    text = "Title:"
+                    text = "Title:", color = MaterialTheme.colors.onSurface
                 )
             }
             item {
@@ -91,7 +91,8 @@ fun EpisodeSectionUI(
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .fillMaxWidth(),
-                    text = sectionTitleText
+                    text = sectionTitleText,
+                    color = MaterialTheme.colors.onSurface
                 )
             }
             if (textSummaryContent.isNotEmpty()) {
