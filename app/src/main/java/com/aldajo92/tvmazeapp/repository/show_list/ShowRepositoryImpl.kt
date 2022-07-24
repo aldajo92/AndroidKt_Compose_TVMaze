@@ -16,15 +16,36 @@ class ShowRepositoryImpl(
 
     private var showMaps: MutableMap<String, ShowDTO> = mutableMapOf()
 
+    private var currentPageNumber: Int = 1
+
     override fun getShows() {
         CoroutineScope(Dispatchers.IO).launch {
             showListFlow.value = api
                 .getShows(1)
                 .also {
+                    currentPageNumber = 1
                     showMaps = it.associateBy { showDTO -> showDTO.id }.toMutableMap()
                 }
         }
     }
+
+    override fun getShowsByPage(page: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val currentShows = showListFlow.value.toMutableList()
+            val result = api
+                .getShows(page)
+                .also {
+                    currentPageNumber = page
+                    showMaps.putAll(
+                        it.associateBy { showDTO -> showDTO.id }.toMutableMap()
+                    )
+                }
+            currentShows.addAll(result)
+            showListFlow.value = currentShows
+        }
+    }
+
+    override fun getCurrentPage() = currentPageNumber
 
     override fun saveSelectedShow(showDTO: ShowDTO) {
         showMaps[showDTO.id] = showDTO

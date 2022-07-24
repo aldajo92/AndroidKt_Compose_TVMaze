@@ -8,11 +8,12 @@ import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class TVShowsViewModel @Inject constructor(
-    showRepository: ShowRepository
+    private val showRepository: ShowRepository
 ) : ViewModel() {
 
     val listShowLiveData: LiveData<List<ShowUIModel>> =
@@ -21,9 +22,15 @@ class TVShowsViewModel @Inject constructor(
             .map { it.map { dto -> dto.toUIModel() } }
             .asLiveData()
 
+
     init {
-        // TODO: Pending to handle pagination
         showRepository.getShows()
+    }
+
+    fun loadNextShows() {
+        val currentPage = showRepository.getCurrentPage()
+        Timber.d((currentPage + 1).toString())
+        //  showRepository.getShowsByPage(currentPage + 1)
     }
 
 }

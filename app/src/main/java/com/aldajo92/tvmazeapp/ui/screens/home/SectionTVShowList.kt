@@ -71,7 +71,9 @@ fun SectionTVShowList(
         listState,
         listResultState.isEmpty(),
         onItemClicked
-    )
+    ){
+        viewModel.loadNextShows()
+    }
 }
 
 @Composable
@@ -79,7 +81,8 @@ fun RenderShowListResult(
     showList: List<ShowUIModel> = listOf(),
     state: LazyListState = rememberLazyListState(),
     showLoader: Boolean = true,
-    onItemClicked: (String) -> Unit = {}
+    onItemClicked: (String) -> Unit = {},
+    onScrollInLastItem: () -> Unit = {}
 ) {
     if (showLoader) Column(
         modifier = Modifier
@@ -98,8 +101,11 @@ fun RenderShowListResult(
         contentPadding = PaddingValues(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        showList.map {
-            item { RenderShowItem(item = it, onItemClicked = onItemClicked) }
+        items(showList.size) { i ->
+            if (i >= showList.size - 2) {
+                onScrollInLastItem()
+            }
+            RenderShowItem(item = showList[i], onItemClicked = onItemClicked)
         }
     }
 }
