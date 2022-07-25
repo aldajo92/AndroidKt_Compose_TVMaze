@@ -1,7 +1,7 @@
 package com.aldajo92.tvmazeapp.di
 
-import com.aldajo92.tvmazeapp.data_sources.ShowDataSource
-import com.aldajo92.tvmazeapp.network.TvMazeApi
+import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeDataSource
+import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
@@ -17,7 +17,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [TvMazeApiModule::class, NetworkModule::class])
+@Module(includes = [DataSourceModule::class])
 object RepositoryModule {
 
     @Provides
@@ -33,8 +33,8 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideEpisodesRepository(
-        api: TvMazeApi
-    ): EpisodesRepository = EpisodesRepositoryImpl(api)
+        showDataSource: EpisodeDataSource
+    ): EpisodesRepository = EpisodesRepositoryImpl(showDataSource)
 
     @Provides
     @Singleton

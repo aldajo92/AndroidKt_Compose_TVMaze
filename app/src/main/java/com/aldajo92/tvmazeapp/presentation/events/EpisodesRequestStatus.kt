@@ -1,6 +1,6 @@
 package com.aldajo92.tvmazeapp.presentation.events
 
-import com.aldajo92.tvmazeapp.network.home.EpisodeDTO
+import com.aldajo92.tvmazeapp.domain.Episode
 
 sealed class EpisodesRequestStatus {
 
@@ -8,6 +8,6 @@ sealed class EpisodesRequestStatus {
 
     object OnLoading : EpisodesRequestStatus()
 
-    class OnSuccess(val list: List<EpisodeDTO> = emptyList()) : EpisodesRequestStatus()
+    class OnSuccess(val list: List<Episode> = emptyList()) : EpisodesRequestStatus()
 
 }

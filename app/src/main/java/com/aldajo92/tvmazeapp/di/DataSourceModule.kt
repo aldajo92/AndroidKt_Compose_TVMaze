@@ -1,7 +1,9 @@
 package com.aldajo92.tvmazeapp.di
 
-import com.aldajo92.tvmazeapp.data_sources.ShowDataSource
-import com.aldajo92.tvmazeapp.data_sources.ShowsAPIDataSourceImpl
+import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeAPIDataSourceImpl
+import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeDataSource
+import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
+import com.aldajo92.tvmazeapp.data_sources.show.ShowsAPIDataSourceImpl
 import com.aldajo92.tvmazeapp.network.TvMazeApi
 import dagger.Module
 import dagger.Provides
@@ -20,5 +22,12 @@ object DataSourceModule {
         api: TvMazeApi
     ): ShowDataSource =
         ShowsAPIDataSourceImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideEpisodeAPIDataSource(
+        api: TvMazeApi
+    ): EpisodeDataSource =
+        EpisodeAPIDataSourceImpl(api)
 
 }

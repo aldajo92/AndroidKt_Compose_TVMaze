@@ -1,6 +1,6 @@
 package com.aldajo92.tvmazeapp.repository.search
 
-import com.aldajo92.tvmazeapp.data_sources.ShowDataSource
+import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
 import com.aldajo92.tvmazeapp.domain.Show
 import com.aldajo92.tvmazeapp.exceptions.TVMazeAppException
 import com.aldajo92.tvmazeapp.presentation.events.ShowsRequestStatus
@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class SearchShowsRepositoryImpl @Inject constructor(

@@ -1,6 +1,6 @@
 package com.aldajo92.tvmazeapp.repository.show_list
 
-import com.aldajo92.tvmazeapp.data_sources.ShowDataSource
+import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
 import com.aldajo92.tvmazeapp.domain.Show
 import com.aldajo92.tvmazeapp.exceptions.TVMazeAppException
 import com.aldajo92.tvmazeapp.presentation.events.ShowsRequestStatus

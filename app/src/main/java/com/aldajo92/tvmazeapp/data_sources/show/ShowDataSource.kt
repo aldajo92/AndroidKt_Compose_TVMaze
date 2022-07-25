@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.data_sources
+package com.aldajo92.tvmazeapp.data_sources.show
 
 import com.aldajo92.tvmazeapp.domain.Show
 import kotlinx.coroutines.flow.Flow

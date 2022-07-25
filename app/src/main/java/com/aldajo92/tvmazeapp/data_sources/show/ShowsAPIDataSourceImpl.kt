@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.data_sources
+package com.aldajo92.tvmazeapp.data_sources.show
 
 import com.aldajo92.tvmazeapp.domain.Show
 import com.aldajo92.tvmazeapp.mappers.toDomainModel
@@ -7,7 +7,9 @@ import com.aldajo92.tvmazeapp.network.handleBodyResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class ShowsAPIDataSourceImpl(val api: TvMazeApi) : ShowDataSource {
+class ShowsAPIDataSourceImpl(
+    private val api: TvMazeApi
+) : ShowDataSource {
 
     override fun getShow(id: String): Flow<Show> = flow {
         val response = api.getShowDetail(id)
