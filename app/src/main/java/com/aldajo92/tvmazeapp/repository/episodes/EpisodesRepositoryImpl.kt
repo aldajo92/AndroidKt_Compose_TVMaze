@@ -1,11 +1,9 @@
-package com.aldajo92.tvmazeapp.repository.show_episodes
+package com.aldajo92.tvmazeapp.repository.episodes
 
-import com.aldajo92.tvmazeapp.exceptions.TVMazeAppException
 import com.aldajo92.tvmazeapp.network.TvMazeApi
 import com.aldajo92.tvmazeapp.network.handleBodyResponse
 import com.aldajo92.tvmazeapp.network.home.EpisodeDTO
 import com.aldajo92.tvmazeapp.presentation.events.EpisodesRequestStatus
-import com.aldajo92.tvmazeapp.presentation.events.ShowsRequestStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,15 +26,11 @@ class EpisodesRepositoryImpl(
     override fun getEpisodes(showId: String) {
         episodesListFlow.value = EpisodesRequestStatus.OnLoading
         CoroutineScope(Dispatchers.IO).launch {
-            if (showId != lastShowId) {
-                episodesListFlow.value = try {
-                    requestsEpisodesFromAPI(showId)
-                        .let { EpisodesRequestStatus.OnSuccess(it) }
-                } catch (e: Exception) {
-                    EpisodesRequestStatus.OnError(e.message.orEmpty())
-                }
-            } else {
-                EpisodesRequestStatus.OnSuccess(lastEpisodes)
+            episodesListFlow.value = try {
+                requestsEpisodesFromAPI(showId)
+                    .let { EpisodesRequestStatus.OnSuccess(it) }
+            } catch (e: Exception) {
+                EpisodesRequestStatus.OnError(e.message.orEmpty())
             }
         }
     }

@@ -1,15 +1,15 @@
 package com.aldajo92.tvmazeapp.repository.detail
 
-import com.aldajo92.tvmazeapp.network.home.ShowDTO
+import com.aldajo92.tvmazeapp.domain.Show
 
 class ShowDetailRepositoryImpl : ShowDetailRepository {
 
-    private lateinit var selectedShowDTO: ShowDTO
+    private lateinit var selectedShow: Show
 
-    override fun getSelectShow(): ShowDTO = selectedShowDTO
+    override fun getSelectShow(): Show = selectedShow
 
-    override fun saveSelectedShow(showDTO: ShowDTO) {
-        selectedShowDTO = showDTO
+    override fun saveSelectedShow(show: Show) {
+        selectedShow = show
     }
 
 }

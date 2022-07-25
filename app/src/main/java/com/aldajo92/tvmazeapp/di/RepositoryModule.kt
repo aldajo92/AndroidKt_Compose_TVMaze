@@ -1,12 +1,13 @@
 package com.aldajo92.tvmazeapp.di
 
+import com.aldajo92.tvmazeapp.data_sources.ShowDataSource
 import com.aldajo92.tvmazeapp.network.TvMazeApi
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepositoryImpl
-import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepository
-import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepositoryImpl
+import com.aldajo92.tvmazeapp.repository.episodes.EpisodesRepository
+import com.aldajo92.tvmazeapp.repository.episodes.EpisodesRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepositoryImpl
 import dagger.Module
@@ -16,14 +17,14 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module(includes = [TvMazeApiModule::class])
+@Module(includes = [TvMazeApiModule::class, NetworkModule::class])
 object RepositoryModule {
 
     @Provides
     @Singleton
     fun provideShowRepository(
-        api: TvMazeApi
-    ): ShowRepository = ShowRepositoryImpl(api)
+        showDataSource: ShowDataSource
+    ): ShowRepository = ShowRepositoryImpl(showDataSource)
 
     @Provides
     @Singleton
@@ -38,7 +39,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideSearchShowsRepository(
-        api: TvMazeApi
-    ): SearchShowsRepository = SearchShowsRepositoryImpl(api)
+        showDataSource: ShowDataSource
+    ): SearchShowsRepository = SearchShowsRepositoryImpl(showDataSource)
 
 }

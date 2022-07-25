@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.repository.show_episodes
+package com.aldajo92.tvmazeapp.repository.episodes
 
 import com.aldajo92.tvmazeapp.network.home.EpisodeDTO
 import com.aldajo92.tvmazeapp.presentation.events.EpisodesRequestStatus
