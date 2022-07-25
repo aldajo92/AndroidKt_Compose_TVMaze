@@ -7,7 +7,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aldajo92.tvmazeapp.presentation.SearchViewModel
-import com.aldajo92.tvmazeapp.ui.models.SearchResultUIEvents
+import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.SearchAppBar
 import timber.log.Timber
@@ -25,11 +25,11 @@ fun SectionSearch(
     val showLoader: Boolean
 
     when (searchResultState) {
-        is SearchResultUIEvents.OnSuccess -> {
-            searchResultList = (searchResultState as SearchResultUIEvents.OnSuccess).list
+        is ShowResultUIEvents.OnSuccess -> {
+            searchResultList = (searchResultState as ShowResultUIEvents.OnSuccess).list
             showLoader = false
         }
-        is SearchResultUIEvents.OnLoading -> {
+        is ShowResultUIEvents.OnLoading -> {
             searchResultList = listOf()
             showLoader = true
         }

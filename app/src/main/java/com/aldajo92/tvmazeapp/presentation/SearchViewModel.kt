@@ -7,7 +7,7 @@ import androidx.lifecycle.asLiveData
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
-import com.aldajo92.tvmazeapp.ui.models.SearchResultUIEvents
+import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,11 +22,12 @@ class SearchViewModel @Inject constructor(
         searchShowsRepository.clearResults()
     }
 
-    val searchResultsLiveData: LiveData<SearchResultUIEvents> = searchShowsRepository
+    val searchResultsLiveData: LiveData<ShowResultUIEvents> = searchShowsRepository
         .getFlowData()
         .map { searchResultStatus ->
             searchResultStatus.toUIEvent()
-        }.asLiveData()
+        }
+        .asLiveData()
 
     private val _searchTextState = MutableLiveData("")
     val searchTextState: LiveData<String> = _searchTextState
