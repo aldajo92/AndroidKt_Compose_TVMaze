@@ -7,7 +7,6 @@ import androidx.lifecycle.asLiveData
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
-import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map

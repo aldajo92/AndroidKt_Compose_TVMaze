@@ -19,12 +19,6 @@ class EpisodeViewModel @Inject constructor(
     private val _selectedEpisodeLiveData = MutableLiveData<EpisodeUIModel?>()
     val selectedEpisodeLiveData: LiveData<EpisodeUIModel?> = _selectedEpisodeLiveData
 
-//    val episodesLiveData: LiveData<List<EpisodeUIModel>> =
-//        episodesRepository
-//            .getFlowData()
-//            .map { it.map { dto -> dto.toUIModel() } }
-//            .asLiveData()
-
     fun getEpisodeDetails(episodeId: String) {
         viewModelScope.launch {
             if (episodeId.isNotBlank()) {

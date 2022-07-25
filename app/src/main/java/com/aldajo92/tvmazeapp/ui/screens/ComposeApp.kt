@@ -48,10 +48,8 @@ fun ComposeApp() {
                 }
             ),
         ) { backStackEntry ->
-            val showID =
-                (backStackEntry.arguments?.get(NAVIGATION_SHOW_ID_ARGUMENT) as String?).orEmpty()
+            val showID = (backStackEntry.arguments?.get(NAVIGATION_SHOW_ID_ARGUMENT) as String?).orEmpty()
             DetailsScreen(
-                showID,
                 navMainController::navigateUp
             ) { episodeId ->
                 navMainController.navigate("$MAIN_ROUTE_EPISODE/$showID/$episodeId")
