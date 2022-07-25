@@ -49,12 +49,4 @@ object NetworkModule {
             .addInterceptor(loggingInterceptor)
             .build()
 
-
-//    @Provides
-//    @Singleton
-//    fun provideCache(context: Context): Cache {
-//        val cacheSize = 5 * 1024 * 1024 // 5 MB
-//        val cacheDir = context.cacheDir
-//        return Cache(cacheDir, cacheSize.toLong())
-//    }
 }

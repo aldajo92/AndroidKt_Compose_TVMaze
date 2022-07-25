@@ -10,7 +10,6 @@ import com.aldajo92.tvmazeapp.presentation.SearchViewModel
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.SearchAppBar
-import timber.log.Timber
 
 @Composable
 fun SectionSearch(
@@ -39,8 +38,6 @@ fun SectionSearch(
         }
     }
 
-    Timber.d(searchTextState)
-
     SectionSearchUI(
         searchTextState.orEmpty(),
         viewModel::updateSearchTextState,
@@ -51,7 +48,6 @@ fun SectionSearch(
         showList = searchResultList,
         showLoader = showLoader
     ) {
-        Timber.i(it)
         viewModel.saveSelectedShow(it)
         onShowClicked(it)
     }
