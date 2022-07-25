@@ -5,11 +5,8 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +22,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -52,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
+import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.ShowImageShimmer
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
@@ -63,15 +60,20 @@ fun SectionTVShowList(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
-    val listResultState by viewModel.listShowLiveData.observeAsState(listOf())
+    val listResultState by viewModel.showEventsLiveData.observeAsState()
     val listState = rememberForeverLazyListState("Home")
 
+    val currentShowListStatus = viewModel.currentShowList
+    val showLoader = listResultState is ShowResultUIEvents.OnLoading
+
     RenderShowListResult(
-        listResultState,
+        currentShowListStatus,
         listState,
-        listResultState.isEmpty(),
+        showLoader,
         onItemClicked
-    )
+    ) {
+        viewModel.loadNextShows()
+    }
 }
 
 @Composable
@@ -79,9 +81,10 @@ fun RenderShowListResult(
     showList: List<ShowUIModel> = listOf(),
     state: LazyListState = rememberLazyListState(),
     showLoader: Boolean = true,
-    onItemClicked: (String) -> Unit = {}
+    onItemClicked: (String) -> Unit = {},
+    endListReached: () -> Unit = {},
 ) {
-    if (showLoader) Column(
+    if (showList.isEmpty() && showLoader) Column(
         modifier = Modifier
             .padding(top = 20.dp)
             .fillMaxSize()
@@ -98,8 +101,14 @@ fun RenderShowListResult(
         contentPadding = PaddingValues(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        showList.map {
-            item { RenderShowItem(item = it, onItemClicked = onItemClicked) }
+        items(showList.size) { i ->
+            RenderShowItem(item = showList[i], onItemClicked = onItemClicked)
+            if (i >= showList.size - 1 && !showLoader) {
+                endListReached()
+            }
+        }
+        if (showLoader) {
+            item { ShimmerShowItem(Modifier.padding(start = 5.dp)) }
         }
     }
 }

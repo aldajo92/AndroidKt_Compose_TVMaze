@@ -1,11 +1,16 @@
 package com.aldajo92.tvmazeapp.repository.show_list
 
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
+import com.aldajo92.tvmazeapp.presentation.ShowRequestStatus
 import com.aldajo92.tvmazeapp.repository.FlowData
 
-interface ShowRepository : FlowData<List<ShowDTO>> {
+interface ShowRepository : FlowData<ShowRequestStatus> {
 
-    fun getShows()
+    fun getCurrentShows() : List<ShowDTO>
+
+    fun getShowsByPage(page: Int)
+
+    fun getCurrentPage(): Int
 
     fun saveSelectedShow(showDTO: ShowDTO)
 
