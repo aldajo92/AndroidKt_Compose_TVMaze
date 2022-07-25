@@ -1,5 +1,6 @@
 package com.aldajo92.tvmazeapp.mappers
 
+import com.aldajo92.tvmazeapp.database.favorites_show.FavoriteShowEntity
 import com.aldajo92.tvmazeapp.domain.Show
 import com.aldajo92.tvmazeapp.network.home.ScheduleDTO
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
@@ -22,18 +23,6 @@ fun Show.toUIModel() = ShowUIModel(
     scheduleText = this.scheduleText
 )
 
-fun ScheduleDTO.toStringFormatted() =
-    if (this.days.isNotEmpty()) "${this.days.toReadableDays()} ${this.time.validateEmptyTime()}" else "[No schedule available]"
-
-fun String.validateEmptyTime() =
-    if (this.isEmpty()) ": No hour available" else ": ${this.scheduleHourFormat()}"
-
-private fun String.scheduleHourFormat() = this.ifEmpty { "" }
-
-fun List<String>.toReadableDays() = this.map { item ->
-    "${item.subSequence(0, 3)}"
-}.reduce { acc, s -> "$acc, $s" }
-
 fun ShowDTO.toDomainModel() = Show(
     this.id,
     this.url.orEmpty(),
@@ -50,3 +39,53 @@ fun ShowDTO.toDomainModel() = Show(
     this.rating?.get("average")?.toFloat(),
     this.schedule.toStringFormatted()
 )
+fun ScheduleDTO.toStringFormatted() =
+    if (this.days.isNotEmpty()) "${this.days.toReadableDays()} ${this.time.validateEmptyTime()}" else "[No schedule available]"
+
+fun String.validateEmptyTime() =
+    if (this.isEmpty()) ": No hour available" else ": ${this.scheduleHourFormat()}"
+
+private fun String.scheduleHourFormat() = this.ifEmpty { "" }
+
+fun List<String>.toReadableDays() = this.map { item ->
+    "${item.subSequence(0, 3)}"
+}.reduce { acc, s -> "$acc, $s" }
+
+fun List<FavoriteShowEntity>.asDomainModel(): List<Show> {
+    return map {
+        Show(
+            id = it.id,
+            url = it.url,
+            name = it.name,
+            type = it.type,
+            language = it.language,
+            genres = listOf(), // TODO: pending to handle genres here
+            status = it.status,
+            premiered = it.premiered,
+            officialSite = it.officialSite,
+            imageMediumURL = it.imageMediumURL,
+            imageHighURL = it.imageHighURL,
+            summary = it.summary,
+            raiting = it.raiting,
+            scheduleText = it.scheduleText
+        )
+    }
+}
+
+fun Show.asDatabaseModel(): FavoriteShowEntity =
+    FavoriteShowEntity(
+        id = this.id,
+        url = this.url,
+        name = this.name,
+        type = this.type,
+        language = this.language,
+//        genres = listOf(), // TODO: pending to handle genres here
+        status = this.status,
+        premiered = this.premiered,
+        officialSite = this.officialSite,
+        imageMediumURL = this.imageMediumURL,
+        imageHighURL = this.imageHighURL,
+        summary = this.summary,
+        raiting = this.raiting,
+        scheduleText = this.scheduleText
+    )
