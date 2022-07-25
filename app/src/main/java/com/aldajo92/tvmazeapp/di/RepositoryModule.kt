@@ -1,6 +1,8 @@
 package com.aldajo92.tvmazeapp.di
 
 import com.aldajo92.tvmazeapp.network.TvMazeApi
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepository
@@ -22,6 +24,10 @@ object RepositoryModule {
     fun provideShowRepository(
         api: TvMazeApi
     ): ShowRepository = ShowRepositoryImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideShowDetailRepository(): ShowDetailRepository = ShowDetailRepositoryImpl()
 
     @Provides
     @Singleton

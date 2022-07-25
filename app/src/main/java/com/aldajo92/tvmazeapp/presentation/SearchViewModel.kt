@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchShowsRepository: SearchShowsRepository,
-    private val showRepository: ShowRepository
+    private val showDetailRepository: ShowDetailRepository
 ) : ViewModel() {
 
     init {
@@ -40,9 +41,9 @@ class SearchViewModel @Inject constructor(
         searchShowsRepository.performSearchShow(keyword)
     }
 
-    fun setSelectedShow(showId: String) {
+    fun saveSelectedShow(showId: String) {
         searchShowsRepository.getSelectedShow(showId)?.let {
-            showRepository.saveSelectedShow(it)
+            showDetailRepository.saveSelectedShow(it)
         }
     }
 

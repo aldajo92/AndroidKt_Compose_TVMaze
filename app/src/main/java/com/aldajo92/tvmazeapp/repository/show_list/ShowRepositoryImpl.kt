@@ -36,12 +36,7 @@ class ShowRepositoryImpl(
 
     override fun getCurrentPage() = currentPageNumber
 
-    // TODO: Move to DetailShow Repository
-    override fun saveSelectedShow(showDTO: ShowDTO) {
-        showMaps[showDTO.id] = showDTO
-    }
-
-    override suspend fun getShowFromCache(showID: String): ShowDTO? = showMaps[showID]
+    override fun getShowFromCache(showID: String): ShowDTO? = showMaps[showID]
 
     override fun getFlowData(): Flow<ShowRequestStatus> = showListFlow
 }

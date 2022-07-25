@@ -12,8 +12,6 @@ interface ShowRepository : FlowData<ShowRequestStatus> {
 
     fun getCurrentPage(): Int
 
-    fun saveSelectedShow(showDTO: ShowDTO)
-
-    suspend fun getShowFromCache(showID: String): ShowDTO?
+    fun getShowFromCache(showID: String): ShowDTO?
 
 }
