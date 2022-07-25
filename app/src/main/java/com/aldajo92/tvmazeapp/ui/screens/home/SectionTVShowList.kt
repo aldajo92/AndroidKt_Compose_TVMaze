@@ -70,9 +70,10 @@ fun SectionTVShowList(
         currentShowListStatus,
         listState,
         showLoader,
-        onItemClicked
+        viewModel::loadNextShows
     ) {
-        viewModel.loadNextShows()
+        viewModel.saveSelectedShow(it)
+        onItemClicked(it)
     }
 }
 
@@ -81,8 +82,8 @@ fun RenderShowListResult(
     showList: List<ShowUIModel> = listOf(),
     state: LazyListState = rememberLazyListState(),
     showLoader: Boolean = true,
-    onItemClicked: (String) -> Unit = {},
     endListReached: () -> Unit = {},
+    onShowClicked: (String) -> Unit = {},
 ) {
     if (showList.isEmpty() && showLoader) Column(
         modifier = Modifier
@@ -102,7 +103,7 @@ fun RenderShowListResult(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(showList.size) { i ->
-            RenderShowItem(item = showList[i], onItemClicked = onItemClicked)
+            RenderShowItem(item = showList[i], onShowClicked)
             if (i >= showList.size - 1 && !showLoader) {
                 endListReached()
             }
@@ -151,12 +152,12 @@ fun ShimmerShowItem(modifier: Modifier = Modifier, brush: Brush = createShimmerB
 }
 
 @Composable
-fun RenderShowItem(item: ShowUIModel, onItemClicked: (String) -> Unit) {
+fun RenderShowItem(item: ShowUIModel, onShowClicked: (String) -> Unit) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onItemClicked(item.id) },
+                .clickable { onShowClicked(item.id) },
             horizontalArrangement = Arrangement.End
         ) {
             Column(

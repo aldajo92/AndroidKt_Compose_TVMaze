@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.mappers.toUIModel
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TVShowsViewModel @Inject constructor(
-    private val showRepository: ShowRepository
+    private val showRepository: ShowRepository,
+    private val showDetailRepository: ShowDetailRepository
 ) : ViewModel() {
 
     var currentShowList: List<ShowUIModel> = listOf()
@@ -50,6 +52,12 @@ class TVShowsViewModel @Inject constructor(
         val currentPage = showRepository.getCurrentPage()
         Timber.d((currentPage + 1).toString())
         showRepository.getShowsByPage(currentPage + 1)
+    }
+
+    fun saveSelectedShow(showId: String) {
+        showRepository.getShowFromCache(showId)?.let {
+            showDetailRepository.saveSelectedShow(it)
+        }
     }
 
 }

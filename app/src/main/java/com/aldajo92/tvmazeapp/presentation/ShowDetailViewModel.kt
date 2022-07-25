@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.aldajo92.tvmazeapp.mappers.toUIModel
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.EpisodeUIModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShowDetailViewModel @Inject constructor(
-    private val showRepository: ShowRepository,
+    private val showDetailRepository: ShowDetailRepository,
     private val episodesRepository: EpisodesRepository
 ) : ViewModel() {
 
@@ -34,7 +35,7 @@ class ShowDetailViewModel @Inject constructor(
         episodesRepository.getEpisodes(showID)
         if (showID.isNotBlank()) {
             viewModelScope.launch {
-                _selectedShowLiveData.value = showRepository.getShowFromCache(showID)?.toUIModel()
+                _selectedShowLiveData.value = showDetailRepository.getSelectShow().toUIModel()
             }
         }
     }

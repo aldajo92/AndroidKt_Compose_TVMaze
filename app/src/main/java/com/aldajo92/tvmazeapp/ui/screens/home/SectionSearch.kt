@@ -52,7 +52,7 @@ fun SectionSearch(
         showLoader = showLoader
     ) {
         Timber.i(it)
-        viewModel.setSelectedShow(it)
+        viewModel.saveSelectedShow(it)
         onShowClicked(it)
     }
 
@@ -80,7 +80,7 @@ fun SectionSearchUI(
         RenderShowListResult(
             showList = showList,
             showLoader = showLoader,
-            onItemClicked = onShowClicked
+            onShowClicked = onShowClicked
         )
     }
 }
