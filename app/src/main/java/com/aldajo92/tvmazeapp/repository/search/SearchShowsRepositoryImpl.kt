@@ -2,7 +2,7 @@ package com.aldajo92.tvmazeapp.repository.search
 
 import com.aldajo92.tvmazeapp.network.TvMazeApi
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
-import com.aldajo92.tvmazeapp.presentation.SearchResultStatus
+import com.aldajo92.tvmazeapp.presentation.ShowRequestStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -15,12 +15,12 @@ class SearchShowsRepositoryImpl @Inject constructor(
 ) : SearchShowsRepository {
 
     private val episodesListFlow =
-        MutableStateFlow<SearchResultStatus>(SearchResultStatus.OnSuccess())
+        MutableStateFlow<ShowRequestStatus>(ShowRequestStatus.OnSuccess())
 
     private var searchMapResult: MutableMap<String, ShowDTO> = mutableMapOf()
 
     override fun performSearchShow(keyword: String) {
-        episodesListFlow.value = SearchResultStatus.OnLoading
+        episodesListFlow.value = ShowRequestStatus.OnLoading
         CoroutineScope(Dispatchers.IO).launch {
             episodesListFlow.value = api
                 .searchShows(keyword)
@@ -29,15 +29,16 @@ class SearchShowsRepositoryImpl @Inject constructor(
                         it.associate { searchResultShow -> searchResultShow.show.id to searchResultShow.show }
                             .toMutableMap()
                 }
-                .let { SearchResultStatus.OnSuccess(it) }
+                .map { it.show }
+                .let { ShowRequestStatus.OnSuccess(it) }
         }
     }
 
     override fun getSelectedShow(showId: String): ShowDTO? = searchMapResult[showId]
 
     override fun clearResults() {
-        episodesListFlow.value = SearchResultStatus.OnSuccess()
+        episodesListFlow.value = ShowRequestStatus.OnSuccess()
     }
 
-    override fun getFlowData(): Flow<SearchResultStatus> = episodesListFlow
+    override fun getFlowData(): Flow<ShowRequestStatus> = episodesListFlow
 }

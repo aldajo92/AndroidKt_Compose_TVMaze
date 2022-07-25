@@ -2,9 +2,9 @@ package com.aldajo92.tvmazeapp.repository.search
 
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
 import com.aldajo92.tvmazeapp.repository.FlowData
-import com.aldajo92.tvmazeapp.presentation.SearchResultStatus
+import com.aldajo92.tvmazeapp.presentation.ShowRequestStatus
 
-interface SearchShowsRepository : FlowData<SearchResultStatus> {
+interface SearchShowsRepository : FlowData<ShowRequestStatus> {
 
     fun performSearchShow(keyword: String)
 
