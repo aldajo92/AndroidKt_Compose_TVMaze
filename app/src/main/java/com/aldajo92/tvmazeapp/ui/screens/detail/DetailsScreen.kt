@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.ShowDetailViewModel
+import com.aldajo92.tvmazeapp.ui.models.EpisodeResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.EpisodeUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.AppBarWithArrow
 import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
@@ -39,16 +40,16 @@ import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 
 @Composable
 fun DetailsScreen(
-    showId: String = "showId",
     pressOnBack: () -> Unit = {},
     episodeClicked: (episodeId: String) -> Unit = { _ -> }
 ) {
-
     val viewModel = hiltViewModel<ShowDetailViewModel>()
-    viewModel.getShowDetail(showId)
 
+    val episodesRequestState by viewModel.episodesEventLiveData.observeAsState()
     val selectedShowState by viewModel.selectedShowLiveData.observeAsState()
-    val episodesState = viewModel.episodesLiveData.observeAsState()
+
+    val showLoader = episodesRequestState is EpisodeResultUIEvents.OnLoading
+    val episodesList = viewModel.currentEpisodesList
 
     DetailScreenUI(
         selectedShowState?.name.orEmpty(),
@@ -60,8 +61,8 @@ fun DetailsScreen(
             else it.reduce { acc, s -> "$acc, $s" }
         } ?: "",
         selectedShowState?.language.orEmpty(),
-        episodesState.value?.isEmpty() == true,
-        episodesState.value ?: emptyList(),
+        showLoader,
+        episodesList,
         selectedShowState?.summary.orEmpty(),
         pressOnBack,
         episodeClicked
@@ -118,17 +119,15 @@ fun DetailScreenUI(
 
         LazyColumn {
             item { SummarySection(textSummaryContent = textSummaryContent) }
-            if (episodesLoading) {
-                item { RenderEpisodeItemShimmerColumn(Modifier.padding(start = 15.dp)) }
-            } else {
-                episodesList.groupBy { it.season }.map { entry ->
-                    item {
-                        SeasonSection(
-                            "Season ${entry.key}",
-                            entry.value,
-                            episodeClicked
-                        )
-                    }
+            if (episodesLoading) item {
+                RenderEpisodeItemShimmerColumn(Modifier.padding(start = 15.dp))
+            } else episodesList.groupBy { it.season }.map { entry ->
+                item {
+                    SeasonSection(
+                        "Season ${entry.key}",
+                        entry.value,
+                        episodeClicked
+                    )
                 }
             }
         }

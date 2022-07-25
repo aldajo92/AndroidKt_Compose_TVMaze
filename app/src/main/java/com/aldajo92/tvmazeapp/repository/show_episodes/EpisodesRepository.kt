@@ -1,9 +1,10 @@
 package com.aldajo92.tvmazeapp.repository.show_episodes
 
 import com.aldajo92.tvmazeapp.network.home.EpisodeDTO
+import com.aldajo92.tvmazeapp.presentation.events.EpisodesRequestStatus
 import com.aldajo92.tvmazeapp.repository.FlowData
 
-interface EpisodesRepository : FlowData<List<EpisodeDTO>?> {
+interface EpisodesRepository : FlowData<EpisodesRequestStatus> {
 
     fun getEpisodes(showId: String)
 

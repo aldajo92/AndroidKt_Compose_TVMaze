@@ -1,10 +1,10 @@
 package com.aldajo92.tvmazeapp.repository.show_list
 
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
-import com.aldajo92.tvmazeapp.presentation.ShowRequestStatus
+import com.aldajo92.tvmazeapp.presentation.events.ShowsRequestStatus
 import com.aldajo92.tvmazeapp.repository.FlowData
 
-interface ShowRepository : FlowData<ShowRequestStatus> {
+interface ShowRepository : FlowData<ShowsRequestStatus> {
 
     fun getCurrentShows() : List<ShowDTO>
 

@@ -60,11 +60,11 @@ fun SectionTVShowList(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
-    val listResultState by viewModel.showEventsLiveData.observeAsState()
+    val showsRequestState by viewModel.showEventsLiveData.observeAsState()
     val listState = rememberForeverLazyListState("Home")
 
     val currentShowListStatus = viewModel.currentShowList
-    val showLoader = listResultState is ShowResultUIEvents.OnLoading
+    val showLoader = showsRequestState is ShowResultUIEvents.OnLoading
 
     RenderShowListResult(
         currentShowListStatus,
