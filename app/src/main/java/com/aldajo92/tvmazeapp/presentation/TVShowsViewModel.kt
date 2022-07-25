@@ -39,7 +39,7 @@ class TVShowsViewModel @Inject constructor(
         makeFirstRequest()
     }
 
-    private fun makeFirstRequest() {
+    fun makeFirstRequest() {
         val currentShows = showRepository.getCurrentShows()
         if (currentShows.isEmpty()) {
             showRepository.getShowsByPage(1)

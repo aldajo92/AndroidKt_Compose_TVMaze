@@ -50,16 +50,26 @@ import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
+import com.aldajo92.tvmazeapp.ui.ui_components.ConnectionState
 import com.aldajo92.tvmazeapp.ui.ui_components.ShowImageShimmer
+import com.aldajo92.tvmazeapp.ui.ui_components.connectivityState
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun SectionTVShowList(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel = hiltViewModel<TVShowsViewModel>()
+
+    val connection by connectivityState()
+    if (connection === ConnectionState.Available) {
+        viewModel.makeFirstRequest()
+    }
+
     val showsRequestState by viewModel.showEventsLiveData.observeAsState()
     val listState = rememberForeverLazyListState("Home")
 

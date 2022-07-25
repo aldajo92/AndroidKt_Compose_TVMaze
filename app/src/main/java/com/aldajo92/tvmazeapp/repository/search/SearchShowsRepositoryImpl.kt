@@ -1,6 +1,8 @@
 package com.aldajo92.tvmazeapp.repository.search
 
+import com.aldajo92.tvmazeapp.exceptions.TVMazeAppException
 import com.aldajo92.tvmazeapp.network.TvMazeApi
+import com.aldajo92.tvmazeapp.network.handleBodyResponse
 import com.aldajo92.tvmazeapp.network.home.ShowDTO
 import com.aldajo92.tvmazeapp.presentation.events.ShowsRequestStatus
 import kotlinx.coroutines.CoroutineScope
@@ -22,15 +24,12 @@ class SearchShowsRepositoryImpl @Inject constructor(
     override fun performSearchShow(keyword: String) {
         searchShowListFlow.value = ShowsRequestStatus.OnLoading
         CoroutineScope(Dispatchers.IO).launch {
-            searchShowListFlow.value = api
-                .searchShows(keyword)
-                .also {
-                    searchMapResult =
-                        it.associate { searchResultShow -> searchResultShow.show.id to searchResultShow.show }
-                            .toMutableMap()
-                }
-                .map { it.show }
-                .let { ShowsRequestStatus.OnSuccess(it) }
+            searchShowListFlow.value = try {
+                performSearchFromAPI(keyword)
+                    .let { ShowsRequestStatus.OnSuccess(it) }
+            } catch (e: TVMazeAppException) {
+                ShowsRequestStatus.OnError(e.message.orEmpty())
+            }
         }
     }
 
@@ -41,4 +40,12 @@ class SearchShowsRepositoryImpl @Inject constructor(
     }
 
     override fun getFlowData(): Flow<ShowsRequestStatus> = searchShowListFlow
+
+    private suspend fun performSearchFromAPI(keyword: String): List<ShowDTO> =
+        api.searchShows(keyword)
+            .handleBodyResponse().also {
+                searchMapResult =
+                    it.associate { searchResultShow -> searchResultShow.show.id to searchResultShow.show }
+                        .toMutableMap()
+            }.map { it.show }
 }
