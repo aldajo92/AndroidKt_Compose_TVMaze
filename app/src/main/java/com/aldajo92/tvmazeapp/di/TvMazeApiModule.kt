@@ -1,6 +1,7 @@
 package com.aldajo92.tvmazeapp.di
 
 import com.aldajo92.tvmazeapp.network.TvMazeApi
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,11 +20,12 @@ object TvMazeApiModule {
     @Singleton
     fun provideTvMazeApi(
         okHttpClient: OkHttpClient,
+        moshi: Moshi,
         @Named(TVMAZE_BASE_URL_TAG) baseUrl: String
     ): TvMazeApi =
         Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(okHttpClient)
             .build().create(TvMazeApi::class.java)
 

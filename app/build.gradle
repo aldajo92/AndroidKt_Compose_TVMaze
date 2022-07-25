@@ -9,12 +9,16 @@ ext {
     compose_version = '1.1.1'
 
     androidx_core = '1.8.0'
-    androidx_compose_material = "1.0.0-alpha01"
+    androidx_compose_material = "1.1.1"
     androidx_lifecycle_runtime = "2.5.0"
     androidx_activity_compose = "1.5.0"
+    lifecycle_version = "2.4.0"
+
 
     hilt_version = "2.42"
     hilt_navigation_compose = "1.0.0"
+
+    moshi = "1.13.0"
 
     retrofit_version = "2.9.0"
     okhttp_version = "4.9.3"
@@ -66,18 +70,28 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core-ktx:androidx_core"
+    implementation "androidx.core:core-ktx:$androidx_core"
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material3:material3:$androidx_compose_material"
+    implementation "androidx.compose.material:material:$androidx_compose_material"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle_runtime"
     implementation "androidx.activity:activity-compose:$androidx_activity_compose"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.navigation:navigation-compose:2.5.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.23.1"
+
+    debugImplementation "androidx.compose.ui:ui-tooling:1.1.1"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.1.1"
 
     //==================== Dependency Injection ====================
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_compose"
+
+    //==================== Moshi ==================================
+    implementation "com.squareup.moshi:moshi:$moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi"
 
     //==================== Networking ==============================
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

@@ -1,8 +1,14 @@
 package com.aldajo92.tvmazeapp.di
 
 import com.aldajo92.tvmazeapp.network.TvMazeApi
-import com.aldajo92.tvmazeapp.repository.ShowRepository
-import com.aldajo92.tvmazeapp.repository.ShowRepositoryImpl
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
+import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepositoryImpl
+import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
+import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepositoryImpl
+import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepository
+import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepositoryImpl
+import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
+import com.aldajo92.tvmazeapp.repository.show_list.ShowRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +23,22 @@ object RepositoryModule {
     @Singleton
     fun provideShowRepository(
         api: TvMazeApi
-    ): ShowRepository =
-        ShowRepositoryImpl(api)
+    ): ShowRepository = ShowRepositoryImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideShowDetailRepository(): ShowDetailRepository = ShowDetailRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideEpisodesRepository(
+        api: TvMazeApi
+    ): EpisodesRepository = EpisodesRepositoryImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideSearchShowsRepository(
+        api: TvMazeApi
+    ): SearchShowsRepository = SearchShowsRepositoryImpl(api)
 
 }

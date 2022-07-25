@@ -3,7 +3,7 @@ package com.aldajo92.tvmazeapp.network.home
 import com.squareup.moshi.Json
 
 data class ShowDTO(
-    val id: Long,
+    val id: String,
     val url: String?,
     val name: String,
     val type: String?,
@@ -18,13 +18,19 @@ data class ShowDTO(
     val image: Map<String, String>?,
     @Json(name = "externals") val externalInfo: ExternalInfoDTO?,
     val summary: String?,
-    val rating: Map<String, String>?
+    val rating: Map<String, String>?,
+    val schedule: ScheduleDTO
 )
 
 data class ChannelDTO(
     val id: Long?,
     val name: String?,
     val country: CountryDTO?
+)
+
+data class ScheduleDTO(
+    val time: String,
+    val days: List<String>
 )
 
 data class CountryDTO(
