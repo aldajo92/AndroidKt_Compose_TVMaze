@@ -20,7 +20,8 @@ fun Show.toUIModel() = ShowUIModel(
     imageHighURL = this.imageHighURL,
     summary = this.summary,
     raiting = this.raiting,
-    scheduleText = this.scheduleText
+    scheduleText = this.scheduleText,
+    isFavorite = this.isFavorite
 )
 
 fun ShowDTO.toDomainModel() = Show(
@@ -67,7 +68,8 @@ fun List<FavoriteShowEntity>.asDomainModel(): List<Show> {
             imageHighURL = it.imageHighURL,
             summary = it.summary,
             raiting = it.raiting,
-            scheduleText = it.scheduleText
+            scheduleText = it.scheduleText,
+            true
         )
     }
 }

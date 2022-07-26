@@ -10,9 +10,14 @@ import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.favorites.FavoritesRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
+import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,16 +27,55 @@ class SearchViewModel @Inject constructor(
     private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
+    private var currentShowList: List<ShowUIModel> = listOf()
+    private var favoritesShowMap: MutableMap<String, ShowUIModel> = mutableMapOf()
+
+    private val showsEventFlow: Flow<ShowResultUIEvents> = searchShowsRepository
+        .getFlowData()
+        .map { showResultStatus ->
+            showResultStatus.toUIEvent()
+        }
+
+    private val favoritesShowEventFlow: Flow<ShowResultUIEvents> = favoritesRepository
+        .getFlowData()
+        .map { favoriteShowResultStatus ->
+            favoriteShowResultStatus.toUIEvent()
+        }
+
+    val loadingLiveData: LiveData<Boolean> =
+        showsEventFlow.combine(favoritesShowEventFlow) { showEvent, favoriteShowEvent ->
+            showEvent is ShowResultUIEvents.OnLoading || favoriteShowEvent is ShowResultUIEvents.OnLoading
+        }.asLiveData()
+
+    val showListLiveData =
+        showsEventFlow.combine(favoritesShowEventFlow) { showEvent, favoriteShowEvent ->
+
+            if (favoriteShowEvent is ShowResultUIEvents.OnSuccess) {
+                favoritesShowMap = favoriteShowEvent.list.associateBy { it.id }.toMutableMap()
+                Timber.d(" favorite showsEventFlow triggered")
+            }
+
+            if (showEvent is ShowResultUIEvents.OnSuccess) {
+                currentShowList = showEvent.list
+                Timber.d("showsEventFlow triggered")
+            }
+
+            currentShowList.forEachIndexed { i, show ->
+                show.isFavorite = favoritesShowMap.containsKey(show.id)
+            }
+
+            Timber.d(favoritesShowMap.keys.toString())
+
+            currentShowList
+
+        }
+
+    private val _updatedShowId = MutableLiveData("")
+    val updatedShowId: LiveData<String> = _updatedShowId
+
     init {
         searchShowsRepository.clearResults()
     }
-
-    val searchResultsLiveData: LiveData<ShowResultUIEvents> = searchShowsRepository
-        .getFlowData()
-        .map { searchResultStatus ->
-            searchResultStatus.toUIEvent()
-        }
-        .asLiveData()
 
     private val _searchTextState = MutableLiveData("")
     val searchTextState: LiveData<String> = _searchTextState
@@ -50,11 +94,13 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun markAsFavorite(showId: String){
+    fun markAsFavorite(showId: String, isFavorite: Boolean) {
         viewModelScope.launch {
-            searchShowsRepository.getSelectedShow(showId)?.let {
+            if (!isFavorite) searchShowsRepository.getSelectedShow(showId)?.let {
                 favoritesRepository.saveFavoriteShow(it)
-            }
+            } else favoritesRepository.removeFavoriteShow(showId)
+            delay(700)
+            _updatedShowId.value = showId
         }
     }
 

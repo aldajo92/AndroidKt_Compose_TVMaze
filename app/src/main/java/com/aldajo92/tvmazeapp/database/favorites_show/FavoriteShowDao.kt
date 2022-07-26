@@ -18,4 +18,7 @@ interface FavoriteShowDao {
     @Query("DELETE FROM favorites_shows WHERE id = :key")
     fun deleteById(key: String)
 
+    @Query("SELECT EXISTS (SELECT * FROM favorites_shows WHERE id = :key)")
+    fun showFavoriteExists(key: String) : Boolean
+
 }

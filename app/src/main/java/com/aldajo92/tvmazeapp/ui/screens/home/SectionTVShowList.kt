@@ -29,6 +29,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +50,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.aldajo92.tvmazeapp.R
 import com.aldajo92.tvmazeapp.presentation.TVShowsViewModel
 import com.aldajo92.tvmazeapp.ui.compose_utils.rememberForeverLazyListState
-import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.ConnectionState
 import com.aldajo92.tvmazeapp.ui.ui_components.ShowImageShimmer
@@ -57,6 +57,7 @@ import com.aldajo92.tvmazeapp.ui.ui_components.connectivityState
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.random.Random
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -71,15 +72,16 @@ fun SectionTVShowList(
         viewModel.makeFirstRequest()
     }
 
-    val showsRequestState by viewModel.showEventsLiveData.observeAsState()
-    val listState = rememberForeverLazyListState("Home")
+    val scrollListState = rememberForeverLazyListState("Home")
 
-    val currentShowListStatus = viewModel.currentShowList
-    val showLoader = showsRequestState is ShowResultUIEvents.OnLoading
+    val currentShowListState by viewModel.showListLiveData.collectAsState(listOf())
+    val showLoader by viewModel.loadingLiveData.observeAsState(true)
+    val selectedShowId by viewModel.updatedShowId.observeAsState("")
+    Timber.d(selectedShowId)
 
     RenderShowListResult(
-        currentShowListStatus,
-        listState,
+        currentShowListState,
+        scrollListState,
         showLoader,
         viewModel::loadNextShows,
         viewModel::markAsFavorite
@@ -95,7 +97,7 @@ fun RenderShowListResult(
     state: LazyListState = rememberLazyListState(),
     showLoader: Boolean = true,
     endListReached: () -> Unit = {},
-    onStartClicked: (String) -> Unit = {},
+    onStartClicked: (String, Boolean) -> Unit = { _, _ -> },
     onShowClicked: (String) -> Unit = {}
 ) {
     if (showList.isEmpty() && showLoader) Column(
@@ -167,7 +169,7 @@ fun ShimmerShowItem(modifier: Modifier = Modifier, brush: Brush = createShimmerB
 @Composable
 fun RenderShowItem(
     item: ShowUIModel,
-    onStarClicked: (String) -> Unit,
+    onStarClicked: (String, Boolean) -> Unit = { _, _ -> },
     onShowClicked: (String) -> Unit
 ) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -184,9 +186,11 @@ fun RenderShowItem(
                 Text(text = item.name, fontSize = 18.sp)
                 HorizontalTextAnimation(textTitle = item.scheduleText)
                 Icon(
-                    modifier = Modifier.clickable { onStarClicked(item.id) },
-                    painter = painterResource(id = R.drawable.ic_star),
-                    contentDescription = "",
+                    modifier = Modifier.clickable { onStarClicked(item.id, item.isFavorite) },
+                    painter = painterResource(
+                        if (item.isFavorite) R.drawable.ic_star_marked else R.drawable.ic_star
+                    ),
+                    contentDescription = "Icon Favorite",
                 )
             }
             Box(Modifier.background(MaterialTheme.colors.background)) {
