@@ -7,7 +7,7 @@ import androidx.lifecycle.asLiveData
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.mappers.toUIModel
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
-import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepository
+import com.aldajo92.tvmazeapp.repository.episodes.EpisodesRepository
 import com.aldajo92.tvmazeapp.ui.models.EpisodeResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.EpisodeUIModel
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
