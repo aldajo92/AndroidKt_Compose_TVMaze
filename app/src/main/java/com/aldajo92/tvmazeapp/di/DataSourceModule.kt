@@ -5,15 +5,14 @@ import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeDataSource
 import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
 import com.aldajo92.tvmazeapp.data_sources.show.ShowsAPIDataSourceImpl
 import com.aldajo92.tvmazeapp.network.TvMazeApi
-import com.aldajo92.tvmazeapp.data_sources.FavoriteShowsDataSourceImpl
-import com.aldajo92.tvmazeapp.data_sources.FavoriteShowsDataSource
+import com.aldajo92.tvmazeapp.data_sources.favorite_shows.FavoriteShowsDataSourceImpl
+import com.aldajo92.tvmazeapp.data_sources.favorite_shows.FavoriteShowsDataSource
 import com.aldajo92.tvmazeapp.database.favorites_show.FavoriteShowDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
 
 @InstallIn(SingletonComponent::class)
 @Module(includes = [DatabaseModule::class])
@@ -33,6 +32,8 @@ object DataSourceModule {
     ): EpisodeDataSource =
         EpisodeAPIDataSourceImpl(api)
 
+    @Provides
+    @Singleton
     fun provideFavoritesShowsDataSource(
         favoriteShowDao: FavoriteShowDao
     ): FavoriteShowsDataSource =

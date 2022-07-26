@@ -1,4 +1,4 @@
-package com.aldajo92.tvmazeapp.data_sources
+package com.aldajo92.tvmazeapp.data_sources.favorite_shows
 
 import com.aldajo92.tvmazeapp.database.favorites_show.FavoriteShowDao
 import com.aldajo92.tvmazeapp.domain.Show
