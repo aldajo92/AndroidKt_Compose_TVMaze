@@ -3,21 +3,26 @@ package com.aldajo92.tvmazeapp.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.mappers.toUIModel
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
+import com.aldajo92.tvmazeapp.repository.favorites.FavoritesRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class TVShowsViewModel @Inject constructor(
     private val showRepository: ShowRepository,
-    private val showDetailRepository: ShowDetailRepository
+    private val showDetailRepository: ShowDetailRepository,
+    private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
     var currentShowList: List<ShowUIModel> = listOf()
@@ -56,6 +61,14 @@ class TVShowsViewModel @Inject constructor(
     fun saveSelectedShow(showId: String) {
         showRepository.getShowFromCache(showId)?.let {
             showDetailRepository.saveSelectedShow(it)
+        }
+    }
+
+    fun markAsFavorite(showId: String){
+        viewModelScope.launch {
+            showRepository.getShowFromCache(showId)?.let {
+                favoritesRepository.saveFavoriteShow(it)
+            }
         }
     }
 

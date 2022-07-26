@@ -3,6 +3,7 @@ package com.aldajo92.tvmazeapp.ui
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarScreen(
@@ -20,6 +21,12 @@ sealed class BottomBarScreen(
         route = "SEARCH",
         title = "Search",
         icon = Icons.Default.Search
+    )
+
+    object Favorite : BottomBarScreen(
+        route = "FAVORITE",
+        title = "Favorite",
+        icon = Icons.Default.Star
     )
 
 }
