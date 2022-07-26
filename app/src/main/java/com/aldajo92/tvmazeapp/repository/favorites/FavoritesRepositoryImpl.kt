@@ -13,6 +13,12 @@ class FavoritesRepositoryImpl(
     private val favoriteShowsDataSource: FavoriteShowsDataSource
 ) : FavoritesRepository {
 
+    override fun removeFavoriteShow(showId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            favoriteShowsDataSource.deleteFavoriteShow(showId)
+        }
+    }
+
     override fun saveFavoriteShow(show: Show) {
         CoroutineScope(Dispatchers.IO).launch {
             favoriteShowsDataSource.saveFavoriteShow(show)

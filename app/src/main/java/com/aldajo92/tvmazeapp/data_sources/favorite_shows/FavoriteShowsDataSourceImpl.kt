@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 class FavoriteShowsDataSourceImpl(
     private val favoriteShowDao: FavoriteShowDao
 ) : FavoriteShowsDataSource {
-    override fun getFavoriteShow(id: String): Show = Show()
+    override fun getFavoriteShow(showId: String): Show = Show()
 
     override fun saveFavoriteShow(show: Show) {
         favoriteShowDao.insertFavoriteShow(show.asDatabaseModel())
@@ -20,4 +20,8 @@ class FavoriteShowsDataSourceImpl(
         favoriteShowDao.getFavoritesShow().map {
             it?.asDomainModel() ?: emptyList()
         }
+
+    override fun deleteFavoriteShow(showId: String) {
+        favoriteShowDao.deleteById(showId)
+    }
 }

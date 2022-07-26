@@ -5,10 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoriteShowsDataSource {
 
-    fun getFavoriteShow(id: String) : Show
+    fun getFavoriteShow(showId: String) : Show
 
     fun saveFavoriteShow(show: Show)
 
     fun getAllFavoriteShows() : Flow<List<Show>>
+
+    fun deleteFavoriteShow(showId: String)
 
 }

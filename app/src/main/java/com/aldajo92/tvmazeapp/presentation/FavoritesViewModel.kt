@@ -22,4 +22,8 @@ class FavoritesViewModel @Inject constructor(
         }
         .asLiveData()
 
+    fun deleteShowFromFavorites(showId: String){
+        favoritesRepository.removeFavoriteShow(showId)
+    }
+
 }

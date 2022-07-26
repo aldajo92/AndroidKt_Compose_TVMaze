@@ -15,16 +15,18 @@ fun SectionFavorite() {
     val viewModel = hiltViewModel<FavoritesViewModel>()
 
     val favoritesResultState by viewModel.favoritesResultsLiveData.observeAsState()
-    val searchResultList: List<ShowUIModel> = if(favoritesResultState is ShowResultUIEvents.OnSuccess){
-        (favoritesResultState as ShowResultUIEvents.OnSuccess).list
-    } else listOf()
+    val searchResultList: List<ShowUIModel> =
+        if (favoritesResultState is ShowResultUIEvents.OnSuccess) {
+            (favoritesResultState as ShowResultUIEvents.OnSuccess).list
+        } else listOf()
     val listState = rememberForeverLazyListState("Favorites")
 
     RenderShowListResult(
         searchResultList,
         listState,
         false,
-    ){
+        onStartClicked = viewModel::deleteShowFromFavorites
+    ) {
 
     }
 

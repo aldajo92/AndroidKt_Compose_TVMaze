@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aldajo92.tvmazeapp.domain.Show
 
-@Entity
+@Entity(tableName = "favorites_shows")
 data class FavoriteShowEntity constructor(
     @PrimaryKey
     val id: String,

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FavoriteShowDao {
 
-    @Query("select * from FavoriteShowEntity")
+    @Query("select * from favorites_shows")
     fun getFavoritesShow(): Flow<List<FavoriteShowEntity>?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -15,14 +15,7 @@ interface FavoriteShowDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFavoriteShow(show: FavoriteShowEntity)
 
-//    @Query("select * from EpisodeEntity WHERE show LIKE :show")
-//    fun getEpisode(show: String): Flow<EpisodeEntity?>
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insertEpisode(episodeEntity: EpisodeEntity)
+    @Query("DELETE FROM favorites_shows WHERE id = :key")
+    fun deleteById(key: String)
+
 }
-//
-//@Database(entities = [ShowEntity::class, EpisodeEntity::class], version = 1)
-//abstract class AppDatabase : RoomDatabase() {
-//    abstract val showDao: ShowDao
-//}
