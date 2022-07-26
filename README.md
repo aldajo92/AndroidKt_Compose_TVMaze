@@ -2,7 +2,8 @@
 
 # Preview:
 
-<img src=".media/evidence_1.gif" alt="Drawing" style="width: 200px;"/>  <img src=".media/evidence_2.gif" alt="Drawing" style="width: 200px;"/> <img src=".media/evidence_3.gif" alt="Drawing" style="width: 200px;"/>
+<img src=".media/evidence_1.gif" alt="Drawing" style="width: 200px;"/>  
+<!-- <img src=".media/evidence_2.gif" alt="Drawing" style="width: 200px;"/> <img src=".media/evidence_3.gif" alt="Drawing" style="width: 200px;"/> -->
 
 ## Introduction ##
 This project is an Android app wich consumes the ![TVMaze Api](https://www.tvmaze.com/api), to display, list, and provide information about the tv shows. This project is made in Kotlin and Android Compose, and inspired in the concept of clean architecture as it shown in the following diagram to create the project structure.
