@@ -27,6 +27,8 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2525" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3555" />
         <entry key="app/src/main/res/drawable/ic_offline.xml" value="0.3555" />
+        <entry key="app/src/main/res/drawable/ic_star.xml" value="0.39" />
+        <entry key="app/src/main/res/drawable/ic_star_marked.xml" value="0.39" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2525" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2525" />
       </map>

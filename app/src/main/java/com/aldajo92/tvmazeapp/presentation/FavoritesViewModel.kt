@@ -22,6 +22,4 @@ class FavoritesViewModel @Inject constructor(
         }
         .asLiveData()
 
-
-
 }
