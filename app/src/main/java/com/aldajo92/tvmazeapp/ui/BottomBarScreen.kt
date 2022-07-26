@@ -1,9 +1,9 @@
 package com.aldajo92.tvmazeapp.ui
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarScreen(
@@ -26,7 +26,7 @@ sealed class BottomBarScreen(
     object Favorite : BottomBarScreen(
         route = "FAVORITE",
         title = "Favorite",
-        icon = Icons.Default.Favorite
+        icon = Icons.Default.Star
     )
 
 }

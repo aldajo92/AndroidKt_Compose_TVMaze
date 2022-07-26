@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -80,7 +81,8 @@ fun SectionTVShowList(
         currentShowListStatus,
         listState,
         showLoader,
-        viewModel::loadNextShows
+        viewModel::loadNextShows,
+        viewModel::markAsFavorite
     ) {
         viewModel.saveSelectedShow(it)
         onItemClicked(it)
@@ -93,7 +95,8 @@ fun RenderShowListResult(
     state: LazyListState = rememberLazyListState(),
     showLoader: Boolean = true,
     endListReached: () -> Unit = {},
-    onShowClicked: (String) -> Unit = {},
+    onStartClicked: (String) -> Unit = {},
+    onShowClicked: (String) -> Unit = {}
 ) {
     if (showList.isEmpty() && showLoader) Column(
         modifier = Modifier
@@ -113,7 +116,7 @@ fun RenderShowListResult(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(showList.size) { i ->
-            RenderShowItem(item = showList[i], onShowClicked)
+            RenderShowItem(item = showList[i], onStartClicked, onShowClicked)
             if (i >= showList.size - 1 && !showLoader) {
                 endListReached()
             }
@@ -162,7 +165,11 @@ fun ShimmerShowItem(modifier: Modifier = Modifier, brush: Brush = createShimmerB
 }
 
 @Composable
-fun RenderShowItem(item: ShowUIModel, onShowClicked: (String) -> Unit) {
+fun RenderShowItem(
+    item: ShowUIModel,
+    onStarClicked: (String) -> Unit,
+    onShowClicked: (String) -> Unit
+) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Row(
             modifier = Modifier
@@ -176,6 +183,11 @@ fun RenderShowItem(item: ShowUIModel, onShowClicked: (String) -> Unit) {
             ) {
                 Text(text = item.name, fontSize = 18.sp)
                 HorizontalTextAnimation(textTitle = item.scheduleText)
+                Icon(
+                    modifier = Modifier.clickable { onStarClicked(item.id) },
+                    painter = painterResource(id = R.drawable.ic_star),
+                    contentDescription = "",
+                )
             }
             Box(Modifier.background(MaterialTheme.colors.background)) {
                 if (item.imageMediumURL.isNotBlank()) ShowImageShimmer(
