@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aldajo92.tvmazeapp.mappers.toUIModel
-import com.aldajo92.tvmazeapp.repository.show_episodes.EpisodesRepository
+import com.aldajo92.tvmazeapp.repository.episodes.EpisodesRepository
 import com.aldajo92.tvmazeapp.ui.models.EpisodeUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

@@ -1,11 +1,11 @@
 package com.aldajo92.tvmazeapp.repository.detail
 
-import com.aldajo92.tvmazeapp.network.home.ShowDTO
+import com.aldajo92.tvmazeapp.domain.Show
 
 interface ShowDetailRepository {
 
-    fun getSelectShow(): ShowDTO
+    fun getSelectShow(): Show
 
-    fun saveSelectedShow(showDTO: ShowDTO)
+    fun saveSelectedShow(showDTO: Show)
 
 }

@@ -28,7 +28,6 @@ class TVShowsViewModel @Inject constructor(
             searchResultStatus.toUIEvent().also {
                 if (it is ShowResultUIEvents.OnSuccess) {
                     currentShowList = it.list
-                    Timber.d(("Current showList size = ${currentShowList.size}").toString())
                 }
             }
         }
