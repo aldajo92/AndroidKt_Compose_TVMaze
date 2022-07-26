@@ -43,7 +43,8 @@ fun HomeScreen(navMainController: NavHostController) {
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         BottomBarScreen.Home,
-        BottomBarScreen.Search
+        BottomBarScreen.Search,
+        BottomBarScreen.Favorite
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -84,6 +85,9 @@ fun BottomHomeNavGraph(
                     navMainController.navigate("$MAIN_ROUTE_DETAIL/$showId")
                 }
             }
+        }
+        composable(route = BottomBarScreen.Favorite.route) { backStackEntry ->
+            SectionFavorite()
         }
     }
 }

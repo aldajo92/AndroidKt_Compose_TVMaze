@@ -1,6 +1,7 @@
 package com.aldajo92.tvmazeapp.di
 
 import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeDataSource
+import com.aldajo92.tvmazeapp.data_sources.favorite_shows.FavoriteShowsDataSource
 import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepositoryImpl
@@ -8,6 +9,8 @@ import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.episodes.EpisodesRepository
 import com.aldajo92.tvmazeapp.repository.episodes.EpisodesRepositoryImpl
+import com.aldajo92.tvmazeapp.repository.favorites.FavoritesRepository
+import com.aldajo92.tvmazeapp.repository.favorites.FavoritesRepositoryImpl
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.repository.show_list.ShowRepositoryImpl
 import dagger.Module
@@ -41,5 +44,11 @@ object RepositoryModule {
     fun provideSearchShowsRepository(
         showDataSource: ShowDataSource
     ): SearchShowsRepository = SearchShowsRepositoryImpl(showDataSource)
+
+    @Provides
+    @Singleton
+    fun provideFavoritesRepository(
+        favoriteShowsDataSource: FavoriteShowsDataSource
+    ): FavoritesRepository = FavoritesRepositoryImpl(favoriteShowsDataSource)
 
 }
