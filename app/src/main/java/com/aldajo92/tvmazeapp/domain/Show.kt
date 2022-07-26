@@ -14,5 +14,6 @@ data class Show(
     val imageHighURL: String = "",
     val summary: String = "",
     val raiting: Float? = 0f,
-    val scheduleText: String = ""
+    val scheduleText: String = "",
+    var isFavorite: Boolean = false
 )

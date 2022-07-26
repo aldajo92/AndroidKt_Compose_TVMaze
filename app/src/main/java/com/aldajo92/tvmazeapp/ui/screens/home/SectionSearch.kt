@@ -2,12 +2,12 @@ package com.aldajo92.tvmazeapp.ui.screens.home
 
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aldajo92.tvmazeapp.presentation.SearchViewModel
-import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.SearchAppBar
 
@@ -18,25 +18,8 @@ fun SectionSearch(
     val viewModel = hiltViewModel<SearchViewModel>()
 
     val searchTextState by viewModel.searchTextState.observeAsState()
-    val searchResultState by viewModel.searchResultsLiveData.observeAsState()
-
-    val searchResultList: List<ShowUIModel>
-    val showLoader: Boolean
-
-    when (searchResultState) {
-        is ShowResultUIEvents.OnSuccess -> {
-            searchResultList = (searchResultState as ShowResultUIEvents.OnSuccess).list
-            showLoader = false
-        }
-        is ShowResultUIEvents.OnLoading -> {
-            searchResultList = listOf()
-            showLoader = true
-        }
-        else -> {
-            searchResultList = listOf()
-            showLoader = false
-        }
-    }
+    val currentShowListState by viewModel.showListLiveData.collectAsState(listOf())
+    val showLoader by viewModel.loadingLiveData.observeAsState(true)
 
     SectionSearchUI(
         searchTextState.orEmpty(),
@@ -45,7 +28,7 @@ fun SectionSearch(
             viewModel.updateSearchTextState("")
         },
         onSearchClicked = viewModel::performSearch,
-        showList = searchResultList,
+        showList = currentShowListState,
         showLoader = showLoader,
         onStartClicked = viewModel::markAsFavorite
     ) {
@@ -64,7 +47,7 @@ fun SectionSearchUI(
     onSearchClicked: (String) -> Unit = { _ -> },
     showList: List<ShowUIModel> = listOf(),
     showLoader: Boolean = true,
-    onStartClicked: (String) -> Unit = {},
+    onStartClicked: (String, Boolean) -> Unit = { _, _ -> },
     onShowClicked: (String) -> Unit = {}
 ) {
     Scaffold(topBar = {

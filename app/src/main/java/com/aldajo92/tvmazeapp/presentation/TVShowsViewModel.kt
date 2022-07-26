@@ -12,7 +12,8 @@ import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,23 +26,45 @@ class TVShowsViewModel @Inject constructor(
     private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
-    var currentShowList: List<ShowUIModel> = listOf()
+    private var currentShowList: List<ShowUIModel> = listOf()
+    private var favoritesShowMap: MutableMap<String, ShowUIModel> = mutableMapOf()
 
-    val showEventsLiveData: LiveData<ShowResultUIEvents> = showRepository
+    private val showsEventFlow: Flow<ShowResultUIEvents> = showRepository
         .getFlowData()
-        .map { searchResultStatus ->
-            searchResultStatus.toUIEvent().also {
-                if (it is ShowResultUIEvents.OnSuccess) {
-                    currentShowList = it.list
-                }
-            }
+        .map { showResultStatus ->
+            showResultStatus.toUIEvent()
         }
-        .asLiveData()
 
+    private val favoritesShowEventFlow: Flow<ShowResultUIEvents> = favoritesRepository
+        .getFlowData()
+        .map { favoriteShowResultStatus ->
+            favoriteShowResultStatus.toUIEvent()
+        }
 
-    init {
-        makeFirstRequest()
-    }
+    val loadingLiveData: LiveData<Boolean> =
+        showsEventFlow.combine(favoritesShowEventFlow) { showEvent, favoriteShowEvent ->
+            showEvent is ShowResultUIEvents.OnLoading || favoriteShowEvent is ShowResultUIEvents.OnLoading
+        }.asLiveData()
+
+    val showListLiveData =
+        showsEventFlow.combine(favoritesShowEventFlow) { showEvent, favoriteShowEvent ->
+
+            if (favoriteShowEvent is ShowResultUIEvents.OnSuccess) {
+                favoritesShowMap = favoriteShowEvent.list.associateBy { it.id }.toMutableMap()
+            }
+
+            if (showEvent is ShowResultUIEvents.OnSuccess) {
+                currentShowList = showEvent.list
+            }
+
+            currentShowList = currentShowList.map { show ->
+                if (favoritesShowMap.containsKey(show.id)) show.copy(isFavorite = true)
+                else show.copy(isFavorite = false)
+            }
+
+            currentShowList
+
+        }
 
     fun makeFirstRequest() {
         val currentShows = showRepository.getCurrentShows()
@@ -64,10 +87,12 @@ class TVShowsViewModel @Inject constructor(
         }
     }
 
-    fun markAsFavorite(showId: String){
+    fun markAsFavorite(showId: String, isFavorite: Boolean) {
         viewModelScope.launch {
-            showRepository.getShowFromCache(showId)?.let {
+            if (!isFavorite) showRepository.getShowFromCache(showId)?.let {
                 favoritesRepository.saveFavoriteShow(it)
+            } else {
+                favoritesRepository.removeFavoriteShow(showId)
             }
         }
     }

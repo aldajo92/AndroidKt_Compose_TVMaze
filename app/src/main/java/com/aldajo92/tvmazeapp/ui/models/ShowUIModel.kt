@@ -14,5 +14,6 @@ data class ShowUIModel(
     val imageHighURL: String,
     val summary: String,
     val raiting: Float?,
-    val scheduleText : String
+    val scheduleText : String,
+    val isFavorite : Boolean = false
 )

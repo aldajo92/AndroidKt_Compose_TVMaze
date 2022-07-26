@@ -25,7 +25,7 @@ fun SectionFavorite() {
         searchResultList,
         listState,
         false,
-        onStartClicked = viewModel::deleteShowFromFavorites
+        onStartClicked = { showId, _ -> viewModel.deleteShowFromFavorites(showId) }
     ) {
 
     }
