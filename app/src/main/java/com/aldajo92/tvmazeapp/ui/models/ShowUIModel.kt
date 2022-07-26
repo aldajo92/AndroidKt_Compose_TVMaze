@@ -15,5 +15,5 @@ data class ShowUIModel(
     val summary: String,
     val raiting: Float?,
     val scheduleText : String,
-    var isFavorite : Boolean = false
+    val isFavorite : Boolean = false
 )

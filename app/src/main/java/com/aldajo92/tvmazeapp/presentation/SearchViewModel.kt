@@ -12,12 +12,10 @@ import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,26 +50,19 @@ class SearchViewModel @Inject constructor(
 
             if (favoriteShowEvent is ShowResultUIEvents.OnSuccess) {
                 favoritesShowMap = favoriteShowEvent.list.associateBy { it.id }.toMutableMap()
-                Timber.d(" favorite showsEventFlow triggered")
             }
 
             if (showEvent is ShowResultUIEvents.OnSuccess) {
                 currentShowList = showEvent.list
-                Timber.d("showsEventFlow triggered")
             }
 
-            currentShowList.forEachIndexed { i, show ->
-                show.isFavorite = favoritesShowMap.containsKey(show.id)
+            currentShowList = currentShowList.map { show ->
+                if (favoritesShowMap.containsKey(show.id)) show.copy(isFavorite = true)
+                else show.copy(isFavorite = false)
             }
-
-            Timber.d(favoritesShowMap.keys.toString())
 
             currentShowList
-
         }
-
-    private val _updatedShowId = MutableLiveData("")
-    val updatedShowId: LiveData<String> = _updatedShowId
 
     init {
         searchShowsRepository.clearResults()
@@ -99,8 +90,6 @@ class SearchViewModel @Inject constructor(
             if (!isFavorite) searchShowsRepository.getSelectedShow(showId)?.let {
                 favoritesRepository.saveFavoriteShow(it)
             } else favoritesRepository.removeFavoriteShow(showId)
-            delay(700)
-            _updatedShowId.value = showId
         }
     }
 

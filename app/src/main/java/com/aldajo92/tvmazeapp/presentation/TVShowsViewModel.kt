@@ -1,7 +1,6 @@
 package com.aldajo92.tvmazeapp.presentation
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,7 +12,6 @@ import com.aldajo92.tvmazeapp.repository.show_list.ShowRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -53,26 +51,20 @@ class TVShowsViewModel @Inject constructor(
 
             if (favoriteShowEvent is ShowResultUIEvents.OnSuccess) {
                 favoritesShowMap = favoriteShowEvent.list.associateBy { it.id }.toMutableMap()
-                Timber.d(" favorite showsEventFlow triggered")
             }
 
             if (showEvent is ShowResultUIEvents.OnSuccess) {
                 currentShowList = showEvent.list
-                Timber.d("showsEventFlow triggered")
             }
 
-            currentShowList.forEachIndexed { i, show ->
-                show.isFavorite = favoritesShowMap.containsKey(show.id)
+            currentShowList = currentShowList.map { show ->
+                if (favoritesShowMap.containsKey(show.id)) show.copy(isFavorite = true)
+                else show.copy(isFavorite = false)
             }
-
-            Timber.d(favoritesShowMap.keys.toString())
 
             currentShowList
 
         }
-
-    private val _updatedShowId = MutableLiveData("")
-    val updatedShowId: LiveData<String> = _updatedShowId
 
     fun makeFirstRequest() {
         val currentShows = showRepository.getCurrentShows()
@@ -99,9 +91,9 @@ class TVShowsViewModel @Inject constructor(
         viewModelScope.launch {
             if (!isFavorite) showRepository.getShowFromCache(showId)?.let {
                 favoritesRepository.saveFavoriteShow(it)
-            } else favoritesRepository.removeFavoriteShow(showId)
-            delay(700)
-            _updatedShowId.value = showId
+            } else {
+                favoritesRepository.removeFavoriteShow(showId)
+            }
         }
     }
 

@@ -76,8 +76,6 @@ fun SectionTVShowList(
 
     val currentShowListState by viewModel.showListLiveData.collectAsState(listOf())
     val showLoader by viewModel.loadingLiveData.observeAsState(true)
-    val selectedShowId by viewModel.updatedShowId.observeAsState("")
-    Timber.d(selectedShowId)
 
     RenderShowListResult(
         currentShowListState,
