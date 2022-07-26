@@ -4,18 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
+import com.aldajo92.tvmazeapp.repository.favorites.FavoritesRepository
 import com.aldajo92.tvmazeapp.repository.search.SearchShowsRepository
 import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchShowsRepository: SearchShowsRepository,
-    private val showDetailRepository: ShowDetailRepository
+    private val showDetailRepository: ShowDetailRepository,
+    private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
     init {
@@ -43,6 +47,14 @@ class SearchViewModel @Inject constructor(
     fun saveSelectedShow(showId: String) {
         searchShowsRepository.getSelectedShow(showId)?.let {
             showDetailRepository.saveSelectedShow(it)
+        }
+    }
+
+    fun markAsFavorite(showId: String){
+        viewModelScope.launch {
+            searchShowsRepository.getSelectedShow(showId)?.let {
+                favoritesRepository.saveFavoriteShow(it)
+            }
         }
     }
 
