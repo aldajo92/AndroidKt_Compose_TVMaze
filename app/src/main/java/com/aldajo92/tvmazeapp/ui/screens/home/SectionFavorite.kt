@@ -10,7 +10,9 @@ import com.aldajo92.tvmazeapp.ui.models.ShowResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.ShowUIModel
 
 @Composable
-fun SectionFavorite() {
+fun SectionFavorite(
+    onItemClicked: (String) -> Unit = {}
+) {
 
     val viewModel = hiltViewModel<FavoritesViewModel>()
 
@@ -27,7 +29,8 @@ fun SectionFavorite() {
         false,
         onStarClicked = { showId, _ -> viewModel.deleteShowFromFavorites(showId.id) }
     ) {
-
+        viewModel.saveSelectedShow(it)
+        onItemClicked(it.id)
     }
 
 }
