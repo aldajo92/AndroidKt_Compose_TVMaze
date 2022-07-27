@@ -1,9 +1,9 @@
 package com.aldajo92.tvmazeapp.di
 
-import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeAPIDataSourceImpl
+import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeDataSourceApiImpl
 import com.aldajo92.tvmazeapp.data_sources.episode.EpisodeDataSource
 import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSource
-import com.aldajo92.tvmazeapp.data_sources.show.ShowsAPIDataSourceImpl
+import com.aldajo92.tvmazeapp.data_sources.show.ShowDataSourceApiImpl
 import com.aldajo92.tvmazeapp.network.TvMazeApi
 import com.aldajo92.tvmazeapp.data_sources.favorite_shows.FavoriteShowsDataSourceImpl
 import com.aldajo92.tvmazeapp.data_sources.favorite_shows.FavoriteShowsDataSource
@@ -23,14 +23,14 @@ object DataSourceModule {
     fun provideShowsAPIDataSource(
         api: TvMazeApi
     ): ShowDataSource =
-        ShowsAPIDataSourceImpl(api)
+        ShowDataSourceApiImpl(api)
 
     @Provides
     @Singleton
     fun provideEpisodeAPIDataSource(
         api: TvMazeApi
     ): EpisodeDataSource =
-        EpisodeAPIDataSourceImpl(api)
+        EpisodeDataSourceApiImpl(api)
 
     @Provides
     @Singleton

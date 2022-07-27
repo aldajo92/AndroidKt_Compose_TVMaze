@@ -36,16 +36,24 @@ import com.aldajo92.tvmazeapp.ui.models.EpisodeResultUIEvents
 import com.aldajo92.tvmazeapp.ui.models.EpisodeUIModel
 import com.aldajo92.tvmazeapp.ui.ui_components.AppBarWithArrow
 import com.aldajo92.tvmazeapp.ui.ui_components.AsyncImageShimmer
+import com.aldajo92.tvmazeapp.ui.ui_components.ConnectionState
 import com.aldajo92.tvmazeapp.ui.ui_components.RatingBar
 import com.aldajo92.tvmazeapp.ui.ui_components.SummarySection
+import com.aldajo92.tvmazeapp.ui.ui_components.connectivityState
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 
 @Composable
 fun DetailsScreen(
+    showId: String,
     pressOnBack: () -> Unit = {},
     episodeClicked: (episodeId: String) -> Unit = { _ -> }
 ) {
     val viewModel = hiltViewModel<ShowDetailViewModel>()
+
+    val connection by connectivityState()
+    if (connection === ConnectionState.Available) {
+        viewModel.makeFirstRequest(showId)
+    }
 
     val favoriteStates by viewModel.favoriteState.collectAsState(initial = false)
 
@@ -70,7 +78,7 @@ fun DetailsScreen(
         } ?: "",
         selectedShowState?.language.orEmpty(),
         showLoader,
-        episodesList,
+        episodesList ?: emptyList(),
         selectedShowState?.summary.orEmpty(),
         pressOnBack,
         episodeClicked

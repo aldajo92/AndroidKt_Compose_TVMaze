@@ -8,8 +8,9 @@ import com.aldajo92.tvmazeapp.network.handleBodyResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import java.lang.Exception
 
-class EpisodeAPIDataSourceImpl(
+class EpisodeDataSourceApiImpl(
     private val api: TvMazeApi
 ) : EpisodeDataSource {
 
@@ -18,8 +19,12 @@ class EpisodeAPIDataSourceImpl(
     override fun saveEpisode(show: Show) = Unit
 
     override fun getAllEpisodes(showId: String): Flow<List<Episode>> = flow {
-        val result = api.getEpisodes(showId).handleBodyResponse().map { it.toDomainModel() }
-        emit(result)
+        try {
+            val result = api.getEpisodes(showId).handleBodyResponse().map { it.toDomainModel() }
+            emit(result)
+        } catch (e: Exception){
+
+        }
     }
 
 }

@@ -7,7 +7,7 @@ import com.aldajo92.tvmazeapp.network.handleBodyResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class ShowsAPIDataSourceImpl(
+class ShowDataSourceApiImpl(
     private val api: TvMazeApi
 ) : ShowDataSource {
 
@@ -21,13 +21,21 @@ class ShowsAPIDataSourceImpl(
     override fun saveShow(show: Show) = Unit
 
     override fun getAllShows(page: Int): Flow<List<Show>> = flow {
-        val list = api.getShows(page).handleBodyResponse().map { it.toDomainModel() }
-        emit(list)
+        try {
+            val list = api.getShows(page).handleBodyResponse().map { it.toDomainModel() }
+            emit(list)
+        } catch (e: Exception) {
+
+        }
     }
 
     override fun searchShows(keyword: String): Flow<List<Show>> = flow {
-        val list = api.searchShows(keyword).handleBodyResponse().map { it.show.toDomainModel() }
-        emit(list)
+        try {
+            val list = api.searchShows(keyword).handleBodyResponse().map { it.show.toDomainModel() }
+            emit(list)
+        } catch (e: Exception) {
+
+        }
     }
 
 }

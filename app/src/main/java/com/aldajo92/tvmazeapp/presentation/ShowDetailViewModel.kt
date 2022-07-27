@@ -23,24 +23,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShowDetailViewModel @Inject constructor(
-    showDetailRepository: ShowDetailRepository,
-    episodesRepository: EpisodesRepository,
+    private val showDetailRepository: ShowDetailRepository,
+    private val episodesRepository: EpisodesRepository,
     private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
     private val _selectedShowLiveData = MutableLiveData<ShowUIModel?>()
     val selectedShowLiveData: LiveData<ShowUIModel?> = _selectedShowLiveData
 
-    var currentEpisodesList: List<EpisodeUIModel> = listOf()
+    var currentEpisodesList: List<EpisodeUIModel>? = listOf()
 
-    private var _favoriteState : Boolean = false
+    private var _favoriteState: Boolean = false
     val favoriteState: Flow<Boolean> = favoritesRepository
         .getFlowData()
         .map { favoriteShowResultStatus ->
             favoriteShowResultStatus.toUIEvent().let { event ->
                 if (event is ShowResultUIEvents.OnSuccess) {
-                    _favoriteState = event.list.groupBy { it.id }.containsKey(selectedShowLiveData.value?.id)
-                    _selectedShowLiveData.value = _selectedShowLiveData.value?.copy(isFavorite = _favoriteState)
+                    _favoriteState =
+                        event.list.groupBy { it.id }.containsKey(selectedShowLiveData.value?.id)
+                    _selectedShowLiveData.value =
+                        _selectedShowLiveData.value?.copy(isFavorite = _favoriteState)
                 }
                 _favoriteState
             }
@@ -68,6 +70,14 @@ class ShowDetailViewModel @Inject constructor(
         val selectedShow = showDetailRepository.getSelectShow().toUIModel()
         _selectedShowLiveData.value = selectedShow
         episodesRepository.getEpisodes(selectedShow.id)
+        makeFirstRequest(selectedShow.id)
+    }
+
+    // TODO: TEMPORAL APPROACH
+    fun makeFirstRequest(showId: String) {
+        if(currentEpisodesList == null){
+            episodesRepository.getEpisodes(showId)
+        }
     }
 
 }
