@@ -42,7 +42,7 @@ class ShowRepositoryImpl(
 
     override fun getCurrentPage() = currentPageNumber
 
-    override fun getShowFromCache(showID: String): Show? = showMaps[showID]
+    override fun getShowFromCache(showId: String): Show? = showMaps[showId]
 
     override fun getFlowData(): Flow<ShowsRequestStatus> = showListFlow
 

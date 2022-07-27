@@ -63,8 +63,9 @@ fun EpisodeSectionUI(
             .fillMaxSize(),
     ) {
         AppBarWithArrow(
-            modifier = Modifier.fillMaxWidth(),
-            appBarTitle, pressOnBack
+            appBarTitle,
+            showStarIcon = false,
+            pressOnBack = pressOnBack
         )
         if (!imageUrl.isNullOrBlank()) AsyncImage(
             model = imageUrl,

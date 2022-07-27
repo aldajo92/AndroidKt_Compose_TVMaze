@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -45,6 +47,8 @@ fun DetailsScreen(
 ) {
     val viewModel = hiltViewModel<ShowDetailViewModel>()
 
+    val favoriteStates by viewModel.favoriteState.collectAsState(initial = false)
+
     val episodesRequestState by viewModel.episodesEventLiveData.observeAsState()
     val selectedShowState by viewModel.selectedShowLiveData.observeAsState()
 
@@ -53,10 +57,14 @@ fun DetailsScreen(
 
     DetailScreenUI(
         selectedShowState?.name.orEmpty(),
-        selectedShowState?.imageHighURL,
-        selectedShowState?.raiting,
-        selectedShowState?.scheduleText.orEmpty(),
-        selectedShowState?.genres?.let {
+        favoriteStates,
+        onStarClicked = {
+            selectedShowState?.let { viewModel.markAsFavorite(it, it.isFavorite) }
+        },
+        imageUrl = selectedShowState?.imageHighURL,
+        rating = selectedShowState?.raiting,
+        textScheduleValue = selectedShowState?.scheduleText.orEmpty(),
+        textGeneresValue = selectedShowState?.genres?.let {
             if (it.isEmpty()) ""
             else it.reduce { acc, s -> "$acc, $s" }
         } ?: "",
@@ -73,6 +81,8 @@ fun DetailsScreen(
 @Composable
 fun DetailScreenUI(
     sectionTitleText: String = "",
+    starMarked: Boolean = false,
+    onStarClicked: () -> Unit = {},
     imageUrl: String? = "",
     rating: Float? = 0f,
     textScheduleValue: String = "Lun, Tue, Wed : 21:00",
@@ -84,50 +94,56 @@ fun DetailScreenUI(
     pressOnBack: () -> Unit = {},
     episodeClicked: (episodeId: String) -> Unit = { _ -> }
 ) {
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .fillMaxSize(),
-    ) {
-        AppBarWithArrow(
-            modifier = Modifier.fillMaxWidth(),
-            sectionTitleText, pressOnBack
-        )
-        Row(
-            modifier = Modifier
-                .padding(vertical = 20.dp)
-                .background(MaterialTheme.colors.background)
-        ) {
-            if (!imageUrl.isNullOrBlank()) AsyncImage(
-                modifier = Modifier
-                    .size(200.dp),
-                model = imageUrl,
-                contentDescription = null
-            ) else Image(
-                painter = painterResource(R.drawable.place_holder_original),
-                modifier = Modifier
-                    .size(200.dp),
-                contentDescription = null
-            )
-            ContentHeader(
-                rateValue = rating,
-                textGeneresValue = textGeneresValue,
-                textScheduleValue = textScheduleValue,
-                textLanguage = textLanguage
-            )
-        }
 
-        LazyColumn {
-            item { SummarySection(textSummaryContent = textSummaryContent) }
-            if (episodesLoading) item {
-                RenderEpisodeItemShimmerColumn(Modifier.padding(start = 15.dp))
-            } else episodesList.groupBy { it.season }.map { entry ->
-                item {
-                    SeasonSection(
-                        "Season ${entry.key}",
-                        entry.value,
-                        episodeClicked
-                    )
+    Scaffold(topBar = {
+        AppBarWithArrow(
+            sectionTitleText,
+            showStarIcon = true,
+            starMarked = starMarked,
+            onStarClicked = onStarClicked,
+            pressOnBack = pressOnBack
+        )
+    }) {
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize(),
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .background(MaterialTheme.colors.background)
+            ) {
+                if (!imageUrl.isNullOrBlank()) AsyncImage(
+                    modifier = Modifier
+                        .size(200.dp),
+                    model = imageUrl,
+                    contentDescription = null
+                ) else Image(
+                    painter = painterResource(R.drawable.place_holder_original),
+                    modifier = Modifier
+                        .size(200.dp),
+                    contentDescription = null
+                )
+                ContentHeader(
+                    rateValue = rating,
+                    textGeneresValue = textGeneresValue,
+                    textScheduleValue = textScheduleValue,
+                    textLanguage = textLanguage
+                )
+            }
+            LazyColumn {
+                item { SummarySection(textSummaryContent = textSummaryContent) }
+                if (episodesLoading) item {
+                    RenderEpisodeItemShimmerColumn(Modifier.padding(start = 15.dp))
+                } else episodesList.groupBy { it.season }.map { entry ->
+                    item {
+                        SeasonSection(
+                            "Season ${entry.key}",
+                            entry.value,
+                            episodeClicked
+                        )
+                    }
                 }
             }
         }
@@ -266,7 +282,6 @@ fun RenderEpisodeItemShimmerColumn(
     }
 }
 
-@Preview
 @Composable
 fun RenderEpisodeItemShimmerRow(
     brush: Brush = createShimmerBrush()
@@ -278,7 +293,6 @@ fun RenderEpisodeItemShimmerRow(
     }
 }
 
-@Preview
 @Composable
 fun RenderEpisodeItemShimmer(
     brush: Brush = createShimmerBrush()

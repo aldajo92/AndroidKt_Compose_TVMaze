@@ -6,6 +6,6 @@ interface ShowDetailRepository {
 
     fun getSelectShow(): Show
 
-    fun saveSelectedShow(showDTO: Show)
+    fun saveSelectedShow(show: Show)
 
 }

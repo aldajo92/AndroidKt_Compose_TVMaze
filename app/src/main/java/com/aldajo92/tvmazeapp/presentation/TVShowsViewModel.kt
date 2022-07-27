@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.aldajo92.tvmazeapp.mappers.toDomainModel
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.mappers.toUIModel
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
@@ -81,19 +82,15 @@ class TVShowsViewModel @Inject constructor(
         showRepository.getShowsByPage(currentPage + 1)
     }
 
-    fun saveSelectedShow(showId: String) {
-        showRepository.getShowFromCache(showId)?.let {
-            showDetailRepository.saveSelectedShow(it)
-        }
+    fun saveSelectedShow(showUIModel: ShowUIModel) {
+        showDetailRepository.saveSelectedShow(showUIModel.toDomainModel())
     }
 
-    fun markAsFavorite(showId: String, isFavorite: Boolean) {
+    fun markAsFavorite(showUIModel: ShowUIModel, isFavorite: Boolean) {
         viewModelScope.launch {
-            if (!isFavorite) showRepository.getShowFromCache(showId)?.let {
-                favoritesRepository.saveFavoriteShow(it)
-            } else {
-                favoritesRepository.removeFavoriteShow(showId)
-            }
+            if (!isFavorite)
+                favoritesRepository.saveFavoriteShow(showUIModel.toDomainModel())
+            else favoritesRepository.removeFavoriteShow(showUIModel.id)
         }
     }
 

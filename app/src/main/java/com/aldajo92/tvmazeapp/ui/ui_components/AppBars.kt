@@ -2,8 +2,14 @@
 
 package com.aldajo92.tvmazeapp.ui.ui_components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AppBarDefaults
@@ -16,18 +22,25 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.aldajo92.tvmazeapp.R
 
 @Preview
 @Composable
@@ -93,5 +106,61 @@ fun SearchAppBar(
                 cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
             )
         )
+    }
+}
+
+@Preview
+@Composable
+fun AppBarWithArrow(
+    title: String? = "CustomTitle",
+    showStarIcon: Boolean = true,
+    starMarked: Boolean = false,
+    onStarClicked: () -> Unit = {},
+    pressOnBack: () -> Unit = {},
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(58.dp)
+            .background(color = MaterialTheme.colors.primary),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row {
+            Box {
+                IconButton(modifier = Modifier
+                    .alpha(ContentAlpha.medium),
+                    onClick = {
+                        pressOnBack()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Search Icon",
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                }
+            }
+            Text(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .align(Alignment.CenterVertically),
+                text = title ?: "",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        if (showStarIcon) IconButton(
+            modifier = Modifier.alpha(ContentAlpha.medium),
+            onClick = onStarClicked
+        ) {
+            Icon(
+                tint = MaterialTheme.colors.onPrimary,
+                contentDescription = "Icon Favorite",
+                painter =
+                painterResource(if (starMarked) R.drawable.ic_star_marked else R.drawable.ic_star)
+            )
+        }
     }
 }
