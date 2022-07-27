@@ -18,6 +18,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -46,6 +47,8 @@ fun DetailsScreen(
 ) {
     val viewModel = hiltViewModel<ShowDetailViewModel>()
 
+    val favoriteStates by viewModel.favoriteState.collectAsState(initial = false)
+
     val episodesRequestState by viewModel.episodesEventLiveData.observeAsState()
     val selectedShowState by viewModel.selectedShowLiveData.observeAsState()
 
@@ -54,11 +57,14 @@ fun DetailsScreen(
 
     DetailScreenUI(
         selectedShowState?.name.orEmpty(),
-        selectedShowState?.isFavorite == true,
-        selectedShowState?.imageHighURL,
-        selectedShowState?.raiting,
-        selectedShowState?.scheduleText.orEmpty(),
-        selectedShowState?.genres?.let {
+        favoriteStates,
+        onStarClicked = {
+            selectedShowState?.let { viewModel.markAsFavorite(it, it.isFavorite) }
+        },
+        imageUrl = selectedShowState?.imageHighURL,
+        rating = selectedShowState?.raiting,
+        textScheduleValue = selectedShowState?.scheduleText.orEmpty(),
+        textGeneresValue = selectedShowState?.genres?.let {
             if (it.isEmpty()) ""
             else it.reduce { acc, s -> "$acc, $s" }
         } ?: "",
@@ -76,6 +82,7 @@ fun DetailsScreen(
 fun DetailScreenUI(
     sectionTitleText: String = "",
     starMarked: Boolean = false,
+    onStarClicked: () -> Unit = {},
     imageUrl: String? = "",
     rating: Float? = 0f,
     textScheduleValue: String = "Lun, Tue, Wed : 21:00",
@@ -93,6 +100,7 @@ fun DetailScreenUI(
             sectionTitleText,
             showStarIcon = true,
             starMarked = starMarked,
+            onStarClicked = onStarClicked,
             pressOnBack = pressOnBack
         )
     }) {
