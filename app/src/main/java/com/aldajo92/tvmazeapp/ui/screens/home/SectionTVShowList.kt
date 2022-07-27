@@ -57,7 +57,6 @@ import com.aldajo92.tvmazeapp.ui.ui_components.connectivityState
 import com.aldajo92.tvmazeapp.ui.ui_components.createShimmerBrush
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.random.Random
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -85,7 +84,7 @@ fun SectionTVShowList(
         viewModel::markAsFavorite
     ) {
         viewModel.saveSelectedShow(it)
-        onItemClicked(it)
+        onItemClicked(it.id)
     }
 }
 
@@ -95,8 +94,8 @@ fun RenderShowListResult(
     state: LazyListState = rememberLazyListState(),
     showLoader: Boolean = true,
     endListReached: () -> Unit = {},
-    onStartClicked: (String, Boolean) -> Unit = { _, _ -> },
-    onShowClicked: (String) -> Unit = {}
+    onStarClicked: (ShowUIModel, Boolean) -> Unit = { _, _ -> },
+    onShowClicked: (ShowUIModel) -> Unit
 ) {
     if (showList.isEmpty() && showLoader) Column(
         modifier = Modifier
@@ -116,7 +115,7 @@ fun RenderShowListResult(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(showList.size) { i ->
-            RenderShowItem(item = showList[i], onStartClicked, onShowClicked)
+            RenderShowItem(item = showList[i], onStarClicked, onShowClicked)
             if (i >= showList.size - 1 && !showLoader) {
                 endListReached()
             }
@@ -167,14 +166,14 @@ fun ShimmerShowItem(modifier: Modifier = Modifier, brush: Brush = createShimmerB
 @Composable
 fun RenderShowItem(
     item: ShowUIModel,
-    onStarClicked: (String, Boolean) -> Unit = { _, _ -> },
-    onShowClicked: (String) -> Unit
+    onStarClicked: (ShowUIModel, Boolean) -> Unit = { _, _ -> },
+    onShowClicked: (ShowUIModel) -> Unit
 ) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onShowClicked(item.id) },
+                .clickable { onShowClicked(item) },
             horizontalArrangement = Arrangement.End
         ) {
             Column(
@@ -184,7 +183,7 @@ fun RenderShowItem(
                 Text(text = item.name, fontSize = 18.sp)
                 HorizontalTextAnimation(textTitle = item.scheduleText)
                 Icon(
-                    modifier = Modifier.clickable { onStarClicked(item.id, item.isFavorite) },
+                    modifier = Modifier.clickable { onStarClicked(item, item.isFavorite) },
                     painter = painterResource(
                         if (item.isFavorite) R.drawable.ic_star_marked else R.drawable.ic_star
                     ),

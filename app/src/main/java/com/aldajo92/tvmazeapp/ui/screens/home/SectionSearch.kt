@@ -33,7 +33,7 @@ fun SectionSearch(
         onStartClicked = viewModel::markAsFavorite
     ) {
         viewModel.saveSelectedShow(it)
-        onShowClicked(it)
+        onShowClicked(it.id)
     }
 
 }
@@ -47,8 +47,8 @@ fun SectionSearchUI(
     onSearchClicked: (String) -> Unit = { _ -> },
     showList: List<ShowUIModel> = listOf(),
     showLoader: Boolean = true,
-    onStartClicked: (String, Boolean) -> Unit = { _, _ -> },
-    onShowClicked: (String) -> Unit = {}
+    onStartClicked: (ShowUIModel, Boolean) -> Unit = { _, _ -> },
+    onShowClicked: (ShowUIModel) -> Unit = {}
 ) {
     Scaffold(topBar = {
         SearchAppBar(
@@ -61,7 +61,7 @@ fun SectionSearchUI(
         RenderShowListResult(
             showList = showList,
             showLoader = showLoader,
-            onStartClicked = onStartClicked,
+            onStarClicked = onStartClicked,
             onShowClicked = onShowClicked
         )
     }

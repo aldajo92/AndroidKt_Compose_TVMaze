@@ -24,6 +24,24 @@ fun Show.toUIModel() = ShowUIModel(
     isFavorite = this.isFavorite
 )
 
+fun ShowUIModel.toDomainModel() = Show(
+    id = this.id,
+    url = this.url,
+    name = this.name,
+    type = this.type,
+    language = this.language,
+    genres = listOf(),
+    status = this.status,
+    premiered = this.premiered,
+    officialSite = this.officialSite,
+    imageMediumURL = this.imageMediumURL,
+    imageHighURL = this.imageHighURL,
+    summary = this.summary,
+    raiting = this.raiting,
+    scheduleText = this.scheduleText,
+    isFavorite = this.isFavorite
+)
+
 fun ShowDTO.toDomainModel() = Show(
     this.id,
     this.url.orEmpty(),

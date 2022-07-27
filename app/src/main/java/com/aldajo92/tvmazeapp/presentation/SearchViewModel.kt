@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.aldajo92.tvmazeapp.mappers.toDomainModel
 import com.aldajo92.tvmazeapp.mappers.toUIEvent
 import com.aldajo92.tvmazeapp.repository.detail.ShowDetailRepository
 import com.aldajo92.tvmazeapp.repository.favorites.FavoritesRepository
@@ -79,17 +80,15 @@ class SearchViewModel @Inject constructor(
         searchShowsRepository.performSearchShow(keyword)
     }
 
-    fun saveSelectedShow(showId: String) {
-        searchShowsRepository.getSelectedShow(showId)?.let {
-            showDetailRepository.saveSelectedShow(it)
-        }
+    fun saveSelectedShow(showUIModel: ShowUIModel) {
+        showDetailRepository.saveSelectedShow(showUIModel.toDomainModel())
     }
 
-    fun markAsFavorite(showId: String, isFavorite: Boolean) {
+    fun markAsFavorite(showUIModel: ShowUIModel, isFavorite: Boolean) {
         viewModelScope.launch {
-            if (!isFavorite) searchShowsRepository.getSelectedShow(showId)?.let {
-                favoritesRepository.saveFavoriteShow(it)
-            } else favoritesRepository.removeFavoriteShow(showId)
+            if (!isFavorite)
+                favoritesRepository.saveFavoriteShow(showUIModel.toDomainModel())
+            else favoritesRepository.removeFavoriteShow(showUIModel.id)
         }
     }
 

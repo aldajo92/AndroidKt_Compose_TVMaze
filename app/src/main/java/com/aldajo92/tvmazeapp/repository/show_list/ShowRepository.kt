@@ -12,6 +12,6 @@ interface ShowRepository : FlowData<ShowsRequestStatus> {
 
     fun getCurrentPage(): Int
 
-    fun getShowFromCache(showID: String): Show?
+    fun getShowFromCache(showId: String): Show?
 
 }
