@@ -87,7 +87,12 @@ fun BottomHomeNavGraph(
             }
         }
         composable(route = BottomBarScreen.Favorite.route) { backStackEntry ->
-            SectionFavorite()
+            SectionFavorite{ showId ->
+                // In order to discard duplicated navigation events, we check the Lifecycle
+                if (backStackEntry.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                    navMainController.navigate("$MAIN_ROUTE_DETAIL/$showId")
+                }
+            }
         }
     }
 }
