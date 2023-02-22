@@ -1,18 +1,13 @@
 package com.aldajo92.tvmazeapp.ui.screens.home
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,8 +16,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aldajo92.tvmazeapp.ui.screens.MAIN_ROUTE_DETAIL
 import com.aldajo92.tvmazeapp.ui.BottomBarScreen
+import com.aldajo92.tvmazeapp.ui.screens.MAIN_ROUTE_DETAIL
 
 @Composable
 fun HomeScreen(navMainController: NavHostController) {
@@ -50,13 +45,28 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
-        screens.forEach { screen ->
-            AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navController = navController
-            )
+    Column {
+        Row(
+            Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(1.dp)
+        ) {
+            screens.forEach {
+                Box(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .padding(horizontal = 2.dp)
+                        .weight(1f)
+                        .background(if (currentDestination?.route == it.route) Color.White else Color.Transparent)
+                )
+            }
+        }
+        BottomNavigation {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
+            }
         }
     }
 }
@@ -87,7 +97,7 @@ fun BottomHomeNavGraph(
             }
         }
         composable(route = BottomBarScreen.Favorite.route) { backStackEntry ->
-            SectionFavorite{ showId ->
+            SectionFavorite { showId ->
                 // In order to discard duplicated navigation events, we check the Lifecycle
                 if (backStackEntry.lifecycle.currentState == Lifecycle.State.RESUMED) {
                     navMainController.navigate("$MAIN_ROUTE_DETAIL/$showId")
